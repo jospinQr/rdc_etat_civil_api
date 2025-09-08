@@ -1,0 +1,60 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db-rdc
+    restart: always
+    environment:
+      MYSQL_DATABASE: rdc_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: jospin
+      MYSQL_PASSWORD: joe@8452
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - rdc_etat_civil-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ,"-p${MYSQL_ROOT_PASSWORD}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-rdc
+    restart: always
+    environment:
+      PMA_HOST: mysql-db-rdc  # ← Corrigé aussi
+      PMA_USER: jospin
+      PMA_PASSWORD: joe@8452
+    ports:
+      - "8083:80"
+    depends_on:
+      - mysql
+    networks:
+      - rdc_etat_civil-network
+
+  springboot-app:
+    build: .
+    image: rdc_etat_civil:v1
+    container_name: rdc_etat_civil_api
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db-rdc:3306/rdc_db  # ← CORRECTION IMPORTANTE
+      SPRING_DATASOURCE_USERNAME: jospin
+      SPRING_DATASOURCE_PASSWORD: joe@8452
+    ports:
+      - "8082:8080"
+    networks:
+      - rdc_etat_civil-network
+
+volumes:
+  mysql_data:
+
+networks:
+  rdc_etat_civil-network:
