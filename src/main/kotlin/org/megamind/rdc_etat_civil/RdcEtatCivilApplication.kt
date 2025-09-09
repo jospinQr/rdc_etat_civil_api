@@ -15,3 +15,24 @@ fun main(args: Array<String>) {
 }
 
 
+@RestController
+
+class GrettingController {
+
+
+    @GetMapping("/hello")
+    fun sayHello(): ResponseEntity<Map<String, Any>> {
+
+        return ResponseEntity.ok().body(
+            mapOf(
+                "Nom" to "Jospin",
+                "Age" to 28,
+                "Poid" to 62.4
+            )
+
+        )
+
+    }
+
+
+}
