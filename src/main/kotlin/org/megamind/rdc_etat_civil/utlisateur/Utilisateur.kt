@@ -1,28 +1,40 @@
-package org.megamind.rdc_etat_civil.utlisateur
+package org.megamind.rdc_etat_civil.utlisat
+
+import jakarta.persistence.*
+import org.megamind.rdc_etat_civil.territoire.entite.Entite
+import org.megamind.rdc_etat_civil.territoire.province.Province
 
 
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.stereotype.Service
+@Entity
+@Table(name = "users", uniqueConstraints = [UniqueConstraint(columnNames = ["userName"])])
+data class Utilisateur(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
+
+    @Column(unique = true, nullable = false)
+    val username: String,
+
+    @Column(nullable = false)
+    val password: String,
+
+    @Enumerated(EnumType.STRING)
+    val role: Role = Role.ADMIN,
 
 
-@Service
-class CustomUserDetailsService(
-    private val userRepository: UserRepository
-) : UserDetailsService {
-
-    override fun loadUserByUsername(username: String): UserDetails {
-        val user =
-            userRepository.findByUserName(username)
-                ?: throw UsernameNotFoundException("Utilisateur non trouvé")
+    @ManyToOne
+    @JoinColumn(name = "ProvinceId")
+    val province: Province? = null,
 
 
-        return User
-            .withUsername(user.userName)
-            .password(user.password)
-            .roles(user.role.name)
-            .build()
-    }
+    @ManyToOne
+    @JoinColumn(name = "EntiteId")
+    val entite: Entite? = null
+)
+
+enum class Role {
+    ADMIN,
+    OEC,
+    CB,
+    CD,
 }

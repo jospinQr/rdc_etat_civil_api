@@ -27,8 +27,7 @@ services:
     restart: always
     environment:
       PMA_HOST: mysql-db-rdc  # ← Corrigé aussi
-      PMA_USER: jospin
-      PMA_PASSWORD: joe@8452
+
     ports:
       - "8083:80"
     depends_on:
