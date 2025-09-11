@@ -19,7 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    private val jwtService: JwtService, private val userDetailsService: CustomUserDetailsService
+    private val jwtService: JwtService,
+    private val userDetailsService: CustomUserDetailsService
 ) {
 
 
@@ -29,6 +30,7 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/territoire/**").permitAll()
                     .requestMatchers("/hello").permitAll()
                     .anyRequest().authenticated()
             }.addFilterBefore(

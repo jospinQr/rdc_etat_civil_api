@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@RequestMapping("/quartier")
+@RequestMapping("territoire/quartier")
 class QuartierController(private val service: QuartierService) {
 
 
     @GetMapping("/all")
 
-    fun getAllWhitId(): ResponseEntity<List<QuartierAvecCommunId>> {
-
+    fun getAll(): ResponseEntity<List<QuartierAvecCommunId>> {
 
         return try {
             ResponseEntity(service.findAll(), HttpStatus.OK)

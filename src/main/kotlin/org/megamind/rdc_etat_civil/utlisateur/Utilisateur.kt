@@ -1,6 +1,7 @@
 package org.megamind.rdc_etat_civil.utlisat
 
 import jakarta.persistence.*
+import org.megamind.rdc_etat_civil.territoire.commune.Commune
 import org.megamind.rdc_etat_civil.territoire.entite.Entite
 import org.megamind.rdc_etat_civil.territoire.province.Province
 
@@ -29,7 +30,12 @@ data class Utilisateur(
 
     @ManyToOne
     @JoinColumn(name = "EntiteId")
-    val entite: Entite? = null
+    val entite: Entite? = null,
+   @ManyToOne
+    @JoinColumn(name = "CommunId")
+    val commune: Commune? = null
+
+
 )
 
 enum class Role {

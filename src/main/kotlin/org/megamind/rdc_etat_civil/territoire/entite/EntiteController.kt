@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@RequestMapping("/entite")
+@RequestMapping("territoire/entite")
 class EntiteController(private val service: EntiteService) {
 
 
     @GetMapping("/all")
     fun getAllEntite(): ResponseEntity<List<Entite>> {
 
-        return try {
-            ResponseEntity(service.findAll(), HttpStatus.OK)
+        val entite = service.findAll()
 
-        } catch (ex: Exception) {
+        if (entite.isEmpty()) {
 
-            ResponseEntity(HttpStatus.NOT_FOUND)
+            throw EntityNotFoundException("Aucune ville ou territoire trouvée")
         }
+        return ResponseEntity.ok().body(entite)
 
 
     }
@@ -31,14 +31,13 @@ class EntiteController(private val service: EntiteService) {
     @GetMapping("/province/{provinceId}")
     fun getByProvince(@PathVariable provinceId: Long): ResponseEntity<List<Entite>> {
 
+        val entites = service.findByProvince(provinceId)
 
-        return try {
-            ResponseEntity(service.findByProvince(provinceId), HttpStatus.OK)
-        } catch (ex: EntityNotFoundException) {
-            ResponseEntity(HttpStatus.NOT_FOUND)
-        } catch (ex: Exception) {
-            ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+        if (entites.isEmpty()) {
+            throw EntityNotFoundException("Aucune ville ou territoire trouvée")
         }
+
+        return ResponseEntity.ok(entites)
 
     }
 

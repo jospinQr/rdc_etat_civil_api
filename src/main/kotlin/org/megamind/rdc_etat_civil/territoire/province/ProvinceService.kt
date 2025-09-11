@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 @Service
 class ProvinceService(private val repository: ProvinceRepository) {
 
-    fun getAllProvince(): List<Province> {
+    fun findAllProvinces(): List<Province> {
 
         return try {
             repository.findAll()

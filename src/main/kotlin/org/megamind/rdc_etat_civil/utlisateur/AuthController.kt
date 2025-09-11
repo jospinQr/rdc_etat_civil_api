@@ -1,7 +1,9 @@
 package org.megamind.rdc_etat_civil.utlisateur
 
 
+import org.apache.coyote.BadRequestException
 import org.megamind.rdc_etat_civil.jwt.JwtService
+import org.megamind.rdc_etat_civil.territoire.commune.Commune
 import org.megamind.rdc_etat_civil.utlisat.Role
 import org.megamind.rdc_etat_civil.utlisat.Utilisateur
 import org.springframework.http.ResponseEntity
@@ -27,7 +29,7 @@ class AuthController(
     @PostMapping("/register")
     fun register(@RequestBody request: RegisterRequest): ResponseEntity<AuthResponse> {
         if (userRepository.existsByUsername(request.username)) {
-            return ResponseEntity.badRequest().body(AuthResponse("Username déjà utilisé"))
+            throw BadRequestException("Username déjà utilisé")
         }
 
         val user = Utilisateur(
@@ -48,18 +50,16 @@ class AuthController(
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<AuthResponse> {
         val user = userRepository.findByUsername(request.username)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(AuthResponse("Nom d'utilisateur ou mot de passe incorrect"))
+            ?: throw BadRequestException("Nom d'utilisateur ou mot de passe incorrect")
 
         if (!passwordEncoder.matches(request.password, user.password)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(AuthResponse("Nom d'utilisateur ou mot de passe incorrect"))
+            throw BadRequestException("Nom d'utilisateur ou mot de passe incorrect")
         }
+
 
         // Vérification du rôle
         if (user.role != request.role) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(AuthResponse("Rôle incorrect"))
+            throw BadRequestException("Role incorrecte")
         }
 
         // Si l'utilisateur n'est pas Admin, on vérifie province et entité
@@ -69,23 +69,32 @@ class AuthController(
 
             Role.CD -> {
                 if (user.province != request.province) {
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(AuthResponse("Province incorrecte"))
+                    throw BadRequestException("Province incorrecte")
                 }
             }
 
             Role.CB -> {
                 if (user.province != request.province) {
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(AuthResponse("Province incorrecte"))
+                    throw BadRequestException("Province incorrecte")
                 }
                 if (user.entite != request.entite) {
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(AuthResponse("Entité incorrecte"))
+                    throw BadRequestException("Entité incorrecte")
                 }
             }
 
-            Role.OEC -> { /* logiques spécifiques */
+            Role.OEC -> {
+
+                if (user.province != request.province) {
+                    throw BadRequestException("Province incorrecte")
+                }
+                if (user.entite != request.entite) {
+                    throw BadRequestException("Ville ou territoire incorrecte")
+                }
+
+                if (user.commune != request.commune) {
+                    throw BadRequestException("Commune ou chefferie incorrecte")
+                }
+
             }
         }
 
@@ -108,7 +117,8 @@ data class LoginRequest(
     val password: String,
     val role: Role,
     val province: Province? = null,
-    val entite: Entite? = null
+    val entite: Entite? = null,
+    val commune: Commune? = null,
 )
 
 data class AuthResponse(val token: String)
