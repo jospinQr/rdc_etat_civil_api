@@ -1,0 +1,170 @@
+{
+  "exemples_personnes_rdc": [
+    {
+      "personne_1_pere": {
+        "nom": "MUKAMBA",
+        "postnom": "MBUYI",
+        "prenom": "Jean-Baptiste",
+        "sexe": "MASCULIN",
+        "dateNaissance": "1975-03-15",
+        "heureNaissance": "14:30:00",
+        "lieuNaiss": "Lubumbashi",
+        "profession": "Enseignant",
+        "nationalite": "Congolaise",
+        "communeChefferie": "Lubumbashi",
+        "quartierGroup": "Katuba",
+        "avenueVillage": "Avenue Kasai",
+        "celluleLocalite": "Cellule 12",
+        "telephone": "+243971234567",
+        "email": "jean.mukamba@gmail.com",
+        "statut": "VIVANT",
+        "situationMatrimoniale": "MARIE"
+      }
+    },
+    {
+      "personne_2_mere": {
+        "nom": "KABAMBA",
+        "postnom": "NGALULA",
+        "prenom": "Marie-Claire",
+        "sexe": "FEMININ",
+        "dateNaissance": "1980-07-22",
+        "heureNaissance": "09:15:00",
+        "lieuNaiss": "Kinshasa",
+        "profession": "Infirmière",
+        "nationalite": "Congolaise",
+        "communeChefferie": "Lubumbashi",
+        "quartierGroup": "Katuba",
+        "avenueVillage": "Avenue Kasai",
+        "celluleLocalite": "Cellule 12",
+        "telephone": "+243982345678",
+        "email": "marie.kabamba@yahoo.fr",
+        "statut": "VIVANT",
+        "situationMatrimoniale": "MARIE"
+      }
+    },
+    {
+      "personne_3_enfant": {
+        "nom": "MUKAMBA",
+        "postnom": "MBUYI",
+        "prenom": "Grace",
+        "sexe": "FEMININ",
+        "dateNaissance": "2005-12-10",
+        "heureNaissance": "06:45:00",
+        "lieuNaiss": "Lubumbashi",
+        "profession": "Étudiante",
+        "nationalite": "Congolaise",
+        "communeChefferie": "Lubumbashi",
+        "quartierGroup": "Katuba",
+        "avenueVillage": "Avenue Kasai",
+        "celluleLocalite": "Cellule 12",
+        "telephone": "+243993456789",
+        "email": "grace.mukamba@student.unilu.ac.cd",
+        "pereId": 1,
+        "mereId": 2,
+        "statut": "VIVANT",
+        "situationMatrimoniale": "CELIBATAIRE"
+      }
+    },
+    {
+      "personne_4_autre_famille": {
+        "nom": "TSHIMANGA",
+        "postnom": "KASONGO",
+        "prenom": "Pierre",
+        "sexe": "MASCULIN",
+        "dateNaissance": "1990-05-18",
+        "heureNaissance": "11:20:00",
+        "lieuNaiss": "Mbuji-Mayi",
+        "profession": "Commerçant",
+        "nationalite": "Congolaise",
+        "communeChefferie": "Kananga",
+        "quartierGroup": "Ndesha",
+        "avenueVillage": "Avenue Lumumba",
+        "celluleLocalite": "Cellule 5",
+        "telephone": "+243990123456",
+        "email": "pierre.tshimanga@commerce.cd",
+        "statut": "VIVANT",
+        "situationMatrimoniale": "CELIBATAIRE"
+      }
+    },
+    {
+      "personne_5_personne_agee": {
+        "nom": "ILUNGA",
+        "postnom": "MWEMA",
+        "prenom": "Elisabeth",
+        "sexe": "FEMININ",
+        "dateNaissance": "1955-01-30",
+        "heureNaissance": "16:00:00",
+        "lieuNaiss": "Kolwezi",
+        "profession": "Retraitée",
+        "nationalite": "Congolaise",
+        "communeChefferie": "Kolwezi",
+        "quartierGroup": "Dilala",
+        "avenueVillage": "Avenue Mobutu",
+        "celluleLocalite": "Cellule 8",
+        "telephone": "+243977888999",
+        "statut": "VIVANT",
+        "situationMatrimoniale": "VEUF"
+      }
+    },
+    {
+      "personne_6_jeune": {
+        "nom": "MPIANA",
+        "postnom": "KATENDE",
+        "prenom": "Jonathan",
+        "sexe": "MASCULIN",
+        "dateNaissance": "2010-08-05",
+        "heureNaissance": "08:30:00",
+        "lieuNaiss": "Goma",
+        "nationalite": "Congolaise",
+        "communeChefferie": "Goma",
+        "quartierGroup": "Himbi",
+        "avenueVillage": "Avenue des Volcans",
+        "celluleLocalite": "Cellule 3",
+        "statut": "VIVANT",
+        "situationMatrimoniale": "CELIBATAIRE"
+      }
+    },
+    {
+      "personne_7_autre_province": {
+        "nom": "KAZADI",
+        "postnom": "MULAMBA",
+        "prenom": "Joseph",
+        "sexe": "MASCULIN",
+        "dateNaissance": "1985-11-12",
+        "heureNaissance": "13:45:00",
+        "lieuNaiss": "Bukavu",
+        "profession": "Médecin",
+        "nationalite": "Congolaise",
+        "communeChefferie": "Bukavu",
+        "quartierGroup": "Ibanda",
+        "avenueVillage": "Avenue Patrice Lumumba",
+        "celluleLocalite": "Cellule 1",
+        "telephone": "+243998765432",
+        "email": "dr.kazadi@hopital-bukavu.cd",
+        "statut": "VIVANT",
+        "situationMatrimoniale": "MARIE"
+      }
+    },
+    {
+      "personne_8_kinshasa": {
+        "nom": "NGANDU",
+        "postnom": "KALONJI",
+        "prenom": "Antoinette",
+        "sexe": "FEMININ",
+        "dateNaissance": "1992-04-25",
+        "heureNaissance": "10:15:00",
+        "lieuNaiss": "Kinshasa",
+        "profession": "Journaliste",
+        "nationalite": "Congolaise",
+        "communeChefferie": "Kinshasa",
+        "quartierGroup": "Gombe",
+        "avenueVillage": "Boulevard du 30 Juin",
+        "celluleLocalite": "Cellule Centre",
+        "telephone": "+243812345678",
+        "email": "antoinette.ngandu@radiookapi.net",
+        "statut": "VIVANT",
+        "situationMatrimoniale": "CELIBATAIRE"
+      }
+    }
+  ]
+}

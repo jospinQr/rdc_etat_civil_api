@@ -20,7 +20,7 @@ class CommuneController(private val service: CommuneService) {
 
         // Si vide, on peut décider de lancer une exception personnalisée
         if (communes.isEmpty()) {
-            throw EntityNotFoundException ("Aucune commune trouvée")
+            throw EntityNotFoundException("Aucune commune trouvée")
         }
 
         return ResponseEntity.ok(communes)
@@ -31,7 +31,7 @@ class CommuneController(private val service: CommuneService) {
         val communes = service.findCommunesByEntite(entiteId)
 
         if (communes.isEmpty()) {
-            throw  EntityNotFoundException("Aucune commune trouvée pour l'entité $entiteId")
+            throw EntityNotFoundException("Aucune commune trouvée pour l'entité $entiteId")
         }
 
         return ResponseEntity.ok(communes)

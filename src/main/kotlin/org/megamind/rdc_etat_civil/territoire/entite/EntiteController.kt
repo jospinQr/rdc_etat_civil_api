@@ -34,6 +34,7 @@ class EntiteController(private val service: EntiteService) {
         val entites = service.findByProvince(provinceId)
 
         if (entites.isEmpty()) {
+
             throw EntityNotFoundException("Aucune ville ou territoire trouvée")
         }
 
