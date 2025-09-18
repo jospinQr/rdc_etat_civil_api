@@ -16,9 +16,9 @@ fun Commune.toCommunAvecIdEntiteDto(): CommunAvecIdEntiteDto {
     val entite = this.entite
 
     return CommunAvecIdEntiteDto(
-        id = this.id,
+        id = this.id!!,
         designation = this.designation,
-        entiteId = entite.id
+        entiteId = entite.id!!
     )
 
 }

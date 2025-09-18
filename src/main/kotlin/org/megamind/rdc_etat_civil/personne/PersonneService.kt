@@ -1,10 +1,13 @@
 package org.megamind.rdc_etat_civil.personne
 
+import jakarta.persistence.EntityNotFoundException
+import org.apache.coyote.BadRequestException
 import org.megamind.rdc_etat_civil.personne.dto.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
@@ -20,42 +23,29 @@ class PersonneService(
      * Créer une nouvelle personne
      */
     fun creerPersonne(request: PersonneRequest): PersonneResponse {
-        // Vérification des doublons
-        if (request.dateNaissance != null) {
-            val existeDeja = personneRepository.existsByNomAndPostnomAndPrenomAndDateNaissance(
-                request.nom,
-                request.postnom,
-                request.prenom ?: "",
-                request.dateNaissance
-            )
-            if (existeDeja) {
-                throw IllegalArgumentException(
-                    "Une personne avec ce nom complet et cette date de naissance existe déjà"
-                )
-            }
-        }
+        // Note: La vérification des doublons est maintenant faite dans le controller
 
         // Vérification des parents si spécifiés
-        val pere = request.pereId?.let { 
-            personneRepository.findById(it).orElseThrow { 
-                IllegalArgumentException("Père introuvable avec l'ID: $it") 
+        val pere = request.pereId?.let {
+            personneRepository.findById(it).orElseThrow {
+                EntityNotFoundException("Père introuvable avec l'ID: $it")
             }
         }
-        val mere = request.mereId?.let { 
-            personneRepository.findById(it).orElseThrow { 
-                IllegalArgumentException("Mère introuvable avec l'ID: $it") 
+        val mere = request.mereId?.let {
+            personneRepository.findById(it).orElseThrow {
+                EntityNotFoundException("Mère introuvable avec l'ID: $it")
             }
         }
 
         // Validation logique des parents
-        pere?.let { 
+        pere?.let {
             if (it.sexe != Sexe.MASCULIN) {
-                throw IllegalArgumentException("Le père doit être de sexe masculin")
+                throw BadRequestException("Le père doit être de sexe masculin")
             }
         }
-        mere?.let { 
+        mere?.let {
             if (it.sexe != Sexe.FEMININ) {
-                throw IllegalArgumentException("La mère doit être de sexe féminin")
+                throw BadRequestException("La mère doit être de sexe féminin")
             }
         }
 
@@ -88,13 +78,16 @@ class PersonneService(
     /**
      * Créer plusieurs personnes en une seule fois
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     fun creerPersonnesEnLot(request: PersonneBatchRequest): PersonneBatchResponse {
+
         val personnesCreees = mutableListOf<PersonneResponse>()
         val echecs = mutableListOf<PersonneEchecInfo>()
 
         request.personnes.forEachIndexed { index, personneRequest ->
             try {
-                val personneCreee = creerPersonne(personneRequest)
+                // Utiliser une nouvelle transaction pour chaque personne
+                val personneCreee = creerPersonneIndependante(personneRequest)
                 personnesCreees.add(personneCreee)
             } catch (e: Exception) {
                 echecs.add(
@@ -114,6 +107,14 @@ class PersonneService(
             personnesCreees = personnesCreees,
             echecs = echecs
         )
+    }
+
+    /**
+     * Créer une personne dans une transaction indépendante (pour le batch)
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    fun creerPersonneIndependante(request: PersonneRequest): PersonneResponse {
+        return creerPersonne(request)
     }
 
     /**
@@ -142,14 +143,14 @@ class PersonneService(
         // Vérification des parents
         val pere = request.pereId?.let { pereId ->
             if (pereId == id) throw IllegalArgumentException("Une personne ne peut pas être son propre père")
-            personneRepository.findById(pereId).orElseThrow { 
-                IllegalArgumentException("Père introuvable avec l'ID: $pereId") 
+            personneRepository.findById(pereId).orElseThrow {
+                IllegalArgumentException("Père introuvable avec l'ID: $pereId")
             }
         }
         val mere = request.mereId?.let { mereId ->
             if (mereId == id) throw IllegalArgumentException("Une personne ne peut pas être sa propre mère")
-            personneRepository.findById(mereId).orElseThrow { 
-                IllegalArgumentException("Mère introuvable avec l'ID: $mereId") 
+            personneRepository.findById(mereId).orElseThrow {
+                IllegalArgumentException("Mère introuvable avec l'ID: $mereId")
             }
         }
 
@@ -178,7 +179,7 @@ class PersonneService(
         val personneSauvee = personneRepository.save(personneModifiee)
         return PersonneResponse.fromEntity(personneSauvee)
     }
-  
+
     /**
      * Supprimer une personne
      */
@@ -189,7 +190,7 @@ class PersonneService(
 
         // Vérifier si la personne a des enfants
         val nombreEnfants = personneRepository.findByPere(personne, PageRequest.of(0, 1)).totalElements +
-                           personneRepository.findByMere(personne, PageRequest.of(0, 1)).totalElements
+                personneRepository.findByMere(personne, PageRequest.of(0, 1)).totalElements
 
         if (nombreEnfants > 0) {
             throw IllegalStateException(
@@ -242,9 +243,9 @@ class PersonneService(
         } else {
             Sort.by(criteria.sortBy).ascending()
         }
-        
+
         val pageable = PageRequest.of(criteria.page, criteria.size, sort)
-        
+
         // Combiner les critères de date et d'âge
         val dateDebut = criteria.getFinalDateDebut()
         val dateFin = criteria.getFinalDateFin()
@@ -270,9 +271,9 @@ class PersonneService(
         val parent = personneRepository.findById(parentId).orElseThrow {
             IllegalArgumentException("Parent introuvable avec l'ID: $parentId")
         }
-        
+
         val pageable = PageRequest.of(page, size, Sort.by("dateNaissance").descending())
-        
+
         return when (parent.sexe) {
             Sexe.MASCULIN -> personneRepository.findByPere(parent, pageable)
             Sexe.FEMININ -> personneRepository.findByMere(parent, pageable)
@@ -291,7 +292,7 @@ class PersonneService(
         val femmes = personneRepository.countBySexe(Sexe.FEMININ)
         val vivants = personneRepository.countByStatut(StatutPersonne.VIVANT)
         val decedes = personneRepository.countByStatut(StatutPersonne.DECEDE)
-        
+
         val dateLimiteMineur = LocalDate.now().minusYears(18)
         val mineurs = personneRepository.countMineurs(dateLimiteMineur)
         val majeurs = personneRepository.countMajeurs(dateLimiteMineur)
@@ -347,6 +348,14 @@ class PersonneService(
     @Transactional(readOnly = true)
     fun personneExiste(id: Long): Boolean {
         return personneRepository.existsById(id)
+    }
+
+    /**
+     * Vérifier si une personne avec les mêmes informations existe déjà
+     */
+    @Transactional(readOnly = true)
+    fun verifierDoublon(nom: String, postnom: String, prenom: String, dateNaissance: LocalDate): Boolean {
+        return personneRepository.existsByNomAndPostnomAndPrenomAndDateNaissance(nom, postnom, prenom, dateNaissance)
     }
 
     /**

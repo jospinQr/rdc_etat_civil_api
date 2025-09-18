@@ -13,7 +13,7 @@ fun Quartier.toQuartierAvecCommunId(): QuartierAvecCommunId {
 
         id = this.id,
         designation = this.designation,
-        communeId = this.commune.id
+        communeId = this.commune.id!!
     )
 
 

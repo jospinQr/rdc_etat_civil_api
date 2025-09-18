@@ -80,7 +80,7 @@ class GlobalExceptionHandler {
         val response = ErrorResponse(
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
             error = "Internal Server Error",
-            message = "Une erreur interne est survenue. Veuillez réessayer."
+            message = "Une erreur interne est survenue. Veuillez réessayer. \n message : ${e.message}"
         )
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
     }

@@ -10,7 +10,7 @@ data class Commune(
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    val id: Long,
+    val id: Long?=null,
     val designation: String,
 
     @ManyToOne

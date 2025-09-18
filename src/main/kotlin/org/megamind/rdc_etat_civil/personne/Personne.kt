@@ -33,10 +33,10 @@ data class Personne(
     val sexe: Sexe,
 
     @Column(name = "lieu_naissance", nullable = true, length = 100)
-    val lieuNaiss: String ?= null,
+    val lieuNaiss: String? = null,
 
     @Column(name = "date_naissance", nullable = true)
-    val dateNaissance: LocalDate? =null,
+    val dateNaissance: LocalDate? = null,
 
     @Column(name = "heure_deces", nullable = true)
     val heureNaissance: LocalTime? = null,

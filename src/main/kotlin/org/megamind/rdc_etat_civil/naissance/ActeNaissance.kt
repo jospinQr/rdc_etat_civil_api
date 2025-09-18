@@ -7,15 +7,11 @@ import java.time.LocalDate
 
 @Entity
 @Table(
-    name = "actes_naissance",
-    uniqueConstraints = [
-        UniqueConstraint(columnNames = ["numero_acte"])
-    ]
+    name = "actes_naissance", uniqueConstraints = [UniqueConstraint(columnNames = ["numero_acte"])]
 )
 data class ActeNaissance(
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 
     // Numéro unique de l'acte
@@ -23,28 +19,31 @@ data class ActeNaissance(
     val numeroActe: String,
 
     // Enfant concerné par l'acte
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "enfant_id",
-        nullable = false,
-        foreignKey = ForeignKey(name = "fk_acte_naissance_enfant")
+    @OneToOne(fetch = FetchType.LAZY) @JoinColumn(
+        name = "enfant_id", nullable = false, foreignKey = ForeignKey(name = "fk_acte_naissance_enfant")
     )
     val enfant: Personne,
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "commune_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "commune_id", nullable = false)
     val commune: Commune,
 
-    // Personne qui a déclaré la naissance - nom du déclarant
+// Personne qui a déclaré la naissance — nom du déclarant
     @Column(name = "declarant", length = 100)
     val declarant: String? = null,
 
-    // Officier d'état civil qui enregistre l'acte
+// Officier d'état civil qui enregistre l'acte
     @Column(name = "officier", nullable = false, length = 100)
     val officier: String,
 
-    // Date d’enregistrement de l’acte
+// Date d’enregistrement de l’acte
     @Column(name = "date_enregistrement", nullable = false)
-    val dateEnregistrement: LocalDate = LocalDate.now()
+    val dateEnregistrement: LocalDate = LocalDate.now(),
+
+    @Column(name = "temoin1", nullable = true)
+    val temoin1: String? = null,
+
+    @Column(name = "temoin2", nullable = true)
+    val temoin2: String? = null
+
 )

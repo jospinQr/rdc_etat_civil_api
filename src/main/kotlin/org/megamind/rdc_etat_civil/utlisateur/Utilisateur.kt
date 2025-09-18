@@ -7,7 +7,7 @@ import org.megamind.rdc_etat_civil.territoire.province.Province
 
 
 @Entity
-@Table(name = "users", uniqueConstraints = [UniqueConstraint(columnNames = ["userName"])])
+@Table(name = "users")
 data class Utilisateur(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
