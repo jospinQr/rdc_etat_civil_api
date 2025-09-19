@@ -1,0 +1,44 @@
+{
+  "descriptionLot": "Lot d'actes de naissance pour le mois de janvier 2024",
+  "responsableLot": "KABONGO Jean-Pierre",
+  "dateTraitement": "2024-01-15",
+  "validationStricte": true,
+  "actes": [
+    {
+      "numeroActe": "KIN/2024/001",
+      "enfantId": 1,
+      "communeId": 1,
+      "officier": "KABONGO Jean-Pierre",
+      "dateEnregistrement": "2024-01-15",
+      "declarant": "MUKAMBA Paul",
+      "temoin1": "KABONGO Marie",
+      "temoin2": "MUKAMBA Julie",
+      "numeroOrdre": 1,
+      "reference": "BATCH-001"
+    },
+    {
+      "numeroActe": "KIN/2024/002",
+      "enfantId": 2,
+      "communeId": 1,
+      "officier": "KABONGO Jean-Pierre",
+      "dateEnregistrement": "2024-01-15",
+      "declarant": "KABONGO Joseph",
+      "temoin1": "MUKAMBA Grace",
+      "temoin2": "KABONGO Sarah",
+      "numeroOrdre": 2,
+      "reference": "BATCH-002"
+    },
+    {
+      "numeroActe": "KIN/2024/003",
+      "enfantId": 3,
+      "communeId": 1,
+      "officier": "MWANZA Paul",
+      "dateEnregistrement": "2024-01-15",
+      "declarant": "KABONGO Daniel",
+      "temoin1": "MUKAMBA Ruth",
+      "temoin2": "KABONGO Esther",
+      "numeroOrdre": 3,
+      "reference": "BATCH-003"
+    }
+  ]
+}
