@@ -2,6 +2,7 @@ package org.megamind.rdc_etat_civil.utils
 
 import jakarta.persistence.EntityNotFoundException
 import org.apache.coyote.BadRequestException
+
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
@@ -73,15 +74,5 @@ class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response)
     }
 
-    // 🔴 Gestion générique de toutes les autres erreurs
-    @ExceptionHandler(Exception::class)
-    fun handleGeneric(e: Exception): ResponseEntity<ErrorResponse> {
-        logger.error("Erreur interne", e)
-        val response = ErrorResponse(
-            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            error = "Internal Server Error",
-            message = "Une erreur interne est survenue. Veuillez réessayer. \n message : ${e.message}"
-        )
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
-    }
+
 }

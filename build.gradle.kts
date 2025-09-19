@@ -37,6 +37,7 @@ dependencies {
     testImplementation("com.h2database:h2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("jakarta.validation:jakarta.validation-api:3.1.1")
+    implementation("com.itextpdf:itextpdf:5.5.13.4")
 
 
 
