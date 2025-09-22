@@ -1,0 +1,60 @@
+{
+  "descriptionLot": "Enregistrement de lot d'actes de décès - Commune de Kinshasa",
+  "responsableLot": "Dr. Jean MUKAMBA",
+  "dateTraitement": "2024-01-15",
+  "validationStricte": true,
+  "actes": [
+    {
+      "numeroActe": "DEC-2024-001",
+      "defuntId": 1,
+      "communeId": 1,
+      "dateDeces": "2024-01-10",
+      "heureDeces": "14:30",
+      "lieuDeces": "Hôpital Général de Kinshasa",
+      "causeDeces": "Arrêt cardiaque",
+      "officier": "Dr. Jean MUKAMBA",
+      "declarant": "Marie KABONGO",
+      "dateEnregistrement": "2024-01-15",
+      "temoin1": "Pierre LUKA",
+      "temoin2": "Anne MUTOMBO",
+      "medecin": "Dr. Paul KASENGA",
+      "observations": "Décès survenu après une longue maladie",
+      "numeroOrdre": 1,
+      "reference": "REF-001"
+    },
+    {
+      "numeroActe": "DEC-2024-002",
+      "defuntId": 2,
+      "communeId": 1,
+      "dateDeces": "2024-01-11",
+      "heureDeces": "08:15",
+      "lieuDeces": "Domicile - Avenue Kasa-Vubu",
+      "causeDeces": "Accident de la circulation",
+      "officier": "Dr. Jean MUKAMBA",
+      "declarant": "Joseph MULUMBA",
+      "dateEnregistrement": "2024-01-15",
+      "temoin1": "François KABONGO",
+      "temoin2": "Célestine MUKAMBA",
+      "medecin": "Dr. Marie KASENGA",
+      "observations": "Décès suite à un accident de moto",
+      "numeroOrdre": 2,
+      "reference": "REF-002"
+    },
+    {
+      "numeroActe": "DEC-2024-003",
+      "defuntId": 3,
+      "communeId": 1,
+      "dateDeces": "2024-01-12",
+      "lieuDeces": "Centre de Santé de Kinshasa",
+      "causeDeces": "Maladie infectieuse",
+      "officier": "Dr. Jean MUKAMBA",
+      "declarant": "Thérèse KASENGA",
+      "dateEnregistrement": "2024-01-15",
+      "temoin1": "André MUKAMBA",
+      "medecin": "Dr. Paul KASENGA",
+      "observations": "Décès suite à une infection non traitée",
+      "numeroOrdre": 3,
+      "reference": "REF-003"
+    }
+  ]
+}
