@@ -35,6 +35,8 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
     testImplementation("com.h2database:h2")
+    testImplementation("org.springframework.boot:spring-boot-starter-webflux")
+    testImplementation("io.mockk:mockk:1.13.8")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("jakarta.validation:jakarta.validation-api:3.1.1")
     implementation("com.itextpdf:itextpdf:5.5.13.4")
@@ -58,4 +60,44 @@ allOpen {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    
+    // Configuration des tests par catégorie
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
+    
+    // Exécution parallèle des tests
+    maxParallelForks = Runtime.getRuntime().availableProcessors().div(2)
+}
+
+// Tâches personnalisées pour les tests
+tasks.register<Test>("unitTest") {
+    group = "verification"
+    description = "Exécute les tests unitaires uniquement"
+    useJUnitPlatform {
+        includeTags("unit")
+    }
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+}
+
+tasks.register<Test>("integrationTest") {
+    group = "verification"
+    description = "Exécute les tests d'intégrité uniquement"
+    useJUnitPlatform {
+        includeTags("integration")
+    }
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+}
+
+tasks.register<Test>("apiTest") {
+    group = "verification"
+    description = "Exécute les tests d'API uniquement"
+    useJUnitPlatform {
+        includeTags("api")
+    }
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
 }

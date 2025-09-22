@@ -1,41 +1,28 @@
-# Configuration spécifique aux tests d'intégration
 spring:
-  # Base de données H2 en mémoire pour tests
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
     username: sa
-    password: 
-  
-  # Configuration JPA pour tests
+    password: password
   jpa:
     hibernate:
       ddl-auto: create-drop
     show-sql: false
-    database-platform: org.hibernate.dialect.H2Dialect
-    
-  # Console H2 pour débogage (optionnel)
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
   h2:
     console:
       enabled: true
-      
-  # Réduire les logs verbeux pendant les tests
-  main:
-    banner-mode: off
+  security:
+    user:
+      name: test
+      password: test
+      roles: USER,ADMIN
 
-# Configuration des logs pour tests
 logging:
   level:
-    root: WARN
-    org.springframework.boot.autoconfigure: WARN
-    org.springframework.test: WARN
-    org.springframework.web: WARN
-    org.springframework.security: WARN
-    org.hibernate: WARN
-    com.zaxxer.hikari: WARN
-    org.megamind.rdc_etat_civil: INFO  # Vos logs applicatifs restent visibles
-    
-# Désactiver certaines fonctionnalités non nécessaires en test
-management:
-  endpoints:
-    enabled-by-default: false
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

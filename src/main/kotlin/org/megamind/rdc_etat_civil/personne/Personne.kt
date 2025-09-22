@@ -17,10 +17,10 @@ import java.time.LocalTime
 data class Personne(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L,
+    var id: Long = 0L,
 
     @Column(name = "nom", nullable = false, length = 50)
-    val nom: String,
+    var nom: String,
 
     @Column(name = "postnom", nullable = true, length = 50)
     val postnom: String,
