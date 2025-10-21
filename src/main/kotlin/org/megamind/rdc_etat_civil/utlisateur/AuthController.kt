@@ -9,10 +9,7 @@ import org.megamind.rdc_etat_civil.utlisat.Utilisateur
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.megamind.rdc_etat_civil.territoire.entite.Entite
 import org.megamind.rdc_etat_civil.territoire.province.Province
 import org.springframework.http.HttpStatus
@@ -38,8 +35,45 @@ class AuthController(
             role = request.role,
             province = request.province,
             entite = request.entite,
+            commune = request.commune
 
-            )
+        )
+
+        when (user.role) {
+            Role.ADMIN -> { /* pas de restriction */
+            }
+
+            Role.CD -> {
+                if (request.province == null) {
+                    throw BadRequestException("Province incorrecte")
+                }
+            }
+
+            Role.CB -> {
+                if (request.province == null) {
+                    throw BadRequestException("Province incorrecte")
+                }
+                if (user.entite == null) {
+                    throw BadRequestException("Entité incorrecte")
+                }
+            }
+
+            Role.OEC -> {
+
+                if (request.province == null) {
+                    throw BadRequestException("Province incorrecte")
+                }
+                if (request.entite == null) {
+                    throw BadRequestException("Ville ou territoire incorrecte")
+                }
+
+                if (user.commune == null) {
+                    throw BadRequestException("Commune ou chefferie incorrecte")
+                }
+
+            }
+        }
+
 
         userRepository.save(user)
 
@@ -56,50 +90,32 @@ class AuthController(
             throw BadRequestException("Nom d'utilisateur ou mot de passe incorrect")
         }
 
-
-        // Vérification du rôle
-        if (user.role != request.role) {
-            throw BadRequestException("Role incorrecte")
-        }
-
-        // Si l'utilisateur n'est pas Admin, on vérifie province et entité
-        when (user.role) {
-            Role.ADMIN -> { /* pas de restriction */
-            }
-
-            Role.CD -> {
-                if (user.province != request.province) {
-                    throw BadRequestException("Province incorrecte")
-                }
-            }
-
-            Role.CB -> {
-                if (user.province != request.province) {
-                    throw BadRequestException("Province incorrecte")
-                }
-                if (user.entite != request.entite) {
-                    throw BadRequestException("Entité incorrecte")
-                }
-            }
-
-            Role.OEC -> {
-
-                if (user.province != request.province) {
-                    throw BadRequestException("Province incorrecte")
-                }
-                if (user.entite != request.entite) {
-                    throw BadRequestException("Ville ou territoire incorrecte")
-                }
-
-                if (user.commune != request.commune) {
-                    throw BadRequestException("Commune ou chefferie incorrecte")
-                }
-
-            }
-        }
-
         val token = jwtService.generateToken(user.username)
         return ResponseEntity.ok(AuthResponse(token))
+    }
+
+    @GetMapping("/me")
+    fun me(@RequestHeader("Authorization") authorizationHeader: String?): ResponseEntity<UserInfoResponse> {
+        if (authorizationHeader.isNullOrBlank() || !authorizationHeader.startsWith("Bearer ")) {
+            throw BadRequestException("Token manquant ou invalide")
+        }
+
+        val token = authorizationHeader.removePrefix("Bearer ").trim()
+        val username = jwtService.extractUsername(token)
+            ?: throw BadRequestException("Token invalide")
+
+        val user = userRepository.findByUsername(username)
+            ?: throw BadRequestException("Utilisateur introuvable")
+
+        val body = UserInfoResponse(
+            username = user.username,
+            role = user.role,
+            provinceId = user.province?.id,
+            entiteId = user.entite?.id,
+            communeId = user.commune?.id,
+        )
+
+        return ResponseEntity.ok(body)
     }
 
 }
@@ -109,16 +125,21 @@ data class RegisterRequest(
     val password: String,
     val role: Role,
     val province: Province? = null,
-    val entite: Entite? = null
+    val entite: Entite? = null,
+    val commune: Commune? = null
 )
 
 data class LoginRequest(
     val username: String,
     val password: String,
-    val role: Role,
-    val province: Province? = null,
-    val entite: Entite? = null,
-    val commune: Commune? = null,
 )
 
 data class AuthResponse(val token: String)
+
+data class UserInfoResponse(
+    val username: String,
+    val role: Role,
+    val provinceId: Long?,
+    val entiteId: Long?,
+    val communeId: Long?,
+)

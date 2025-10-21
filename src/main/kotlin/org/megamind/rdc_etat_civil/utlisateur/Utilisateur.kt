@@ -22,11 +22,9 @@ data class Utilisateur(
     @Enumerated(EnumType.STRING)
     val role: Role = Role.ADMIN,
 
-
     @ManyToOne
     @JoinColumn(name = "ProvinceId")
     val province: Province? = null,
-
 
     @ManyToOne
     @JoinColumn(name = "EntiteId")
