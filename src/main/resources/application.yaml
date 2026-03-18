@@ -8,7 +8,7 @@ spring:
     name: rdc_etat_civil
 
   datasource:
-    url: jdbc:mysql://mysql-db-rdc:3306/rdc_db
+    url: jdbc:mysql://mysql:3306/rdc_db
     #   url: jdbc:mysql://localhost:3306/rdc_db
     username: jospin
     password: joe@8452

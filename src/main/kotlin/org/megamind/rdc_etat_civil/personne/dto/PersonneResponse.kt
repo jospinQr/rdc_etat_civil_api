@@ -53,8 +53,8 @@ data class PersonneResponse(
                 mere = personne.mere?.let { PersonneSimple.fromEntity(it) },
                 statut = personne.statut,
                 situationMatrimoniale = personne.situationMatrimoniale,
-                age = personne.dateNaissance?.let { 
-                    java.time.Period.between(it, LocalDate.now()).years 
+                age = personne.dateNaissance?.let {
+                    java.time.Period.between(it, LocalDate.now()).years
                 }
             )
         }

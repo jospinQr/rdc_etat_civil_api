@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import java.time.LocalDateTime
 
-// Modèle uniforme pour les erreurs
+// 🔹 Modèle d'erreur uniforme
 data class ErrorResponse(
     val status: Int,
     val error: String,
@@ -25,7 +25,7 @@ class GlobalExceptionHandler {
 
     private val logger = LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
 
-    // 🔴 Conflits d’intégrité (ex : doublons, contrainte de clé étrangère)
+    // ⚠️ Conflits d’intégrité (doublons, clé étrangère, etc.)
     @ExceptionHandler(DataIntegrityViolationException::class)
     fun handleConflict(e: DataIntegrityViolationException): ResponseEntity<ErrorResponse> {
         logger.error("Conflit de données", e)
@@ -37,7 +37,7 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response)
     }
 
-    // 🔴 Entité non trouvée
+    // ⚠️ Entité non trouvée
     @ExceptionHandler(EntityNotFoundException::class)
     fun handleNotFound(e: EntityNotFoundException): ResponseEntity<ErrorResponse> {
         logger.warn("Entité non trouvée : ${e.message}")
@@ -48,8 +48,19 @@ class GlobalExceptionHandler {
         )
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
     }
+ // ⚠️ Entité non trouvée
+    @ExceptionHandler(BadRequestException::class)
+    fun handleBadRequest(e: BadRequestException): ResponseEntity<ErrorResponse> {
+        logger.warn("Mauvaise requette : ${e.message}")
+        val response = ErrorResponse(
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = "Bad request",
+            message = e.message
+        )
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response)
+    }
 
-    // 🔴 Erreurs de validation (DTOs avec @Valid)
+    // ⚠️ Erreurs de validation (DTOs annotés avec @Valid)
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidation(e: MethodArgumentNotValidException): ResponseEntity<ErrorResponse> {
         val errors = e.bindingResult.fieldErrors.associate { it.field to (it.defaultMessage ?: "Invalid") }
@@ -57,22 +68,44 @@ class GlobalExceptionHandler {
         val response = ErrorResponse(
             status = HttpStatus.BAD_REQUEST.value(),
             error = "Validation Error",
-            message = errors.toString()
+            message = errors.entries.joinToString { "${it.key}: ${it.value}" }
         )
         return ResponseEntity.badRequest().body(response)
     }
 
-    // 🔴 Mauvaise requête personnalisée
-    @ExceptionHandler(BadRequestException::class)
-    fun handleBadRequest(e: BadRequestException): ResponseEntity<ErrorResponse> {
-        logger.warn("Mauvaise requête : ${e.message}")
+    // ⚠️ Erreurs de logique métier (IllegalArgumentException)
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgument(e: IllegalArgumentException): ResponseEntity<ErrorResponse> {
+        logger.warn("Argument illégal : ${e.message}")
         val response = ErrorResponse(
             status = HttpStatus.BAD_REQUEST.value(),
-            error = "Bad Request",
+            error = "${e.message}",
             message = e.message
         )
         return ResponseEntity.badRequest().body(response)
     }
 
+    // ⚠️ Erreurs d’état illégal (IllegalStateException)
+    @ExceptionHandler(IllegalStateException::class)
+    fun handleIllegalState(e: IllegalStateException): ResponseEntity<ErrorResponse> {
+        logger.error("État illégal : ${e.message}")
+        val response = ErrorResponse(
+            status = HttpStatus.CONFLICT.value(),
+            error = "Illegal State",
+            message = e.message
+        )
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response)
+    }
 
+    // ⚠️ Erreurs inattendues (catch-all)
+    @ExceptionHandler(Exception::class)
+    fun handleUnexpected(e: Exception): ResponseEntity<ErrorResponse> {
+        logger.error("Erreur inattendue", e)
+        val response = ErrorResponse(
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            error = "Internal Server Error",
+            message = "Une erreur inattendue s'est produite"
+        )
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
+    }
 }

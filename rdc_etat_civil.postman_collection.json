@@ -1,0 +1,1883 @@
+{
+  "info": {
+    "name": "RDC Etat Civil API (api/v1)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection Postman générée depuis le code source. Base: {{baseUrl}}"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "personneId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "communeId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "entiteId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "provinceId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "acteNaissanceId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "acteDecesId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "acteMariageId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "numeroActe",
+      "value": "AN-2026-0001",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "auth": { "type": "noauth" },
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "auth", "register" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\",\n  \"role\": \"ADMIN\",\n  \"province\": null,\n  \"entite\": null,\n  \"commune\": null\n}\n"
+            },
+            "description": "Crée un utilisateur. Note: pour les rôles CD/CB/OEC, fournir les objets province/entite/commune (au minimum {\"id\": <Long>})."
+          }
+        },
+        {
+          "name": "Register (CD - avec province)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "auth", "register" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"cd_province\",\n  \"password\": \"cd123\",\n  \"role\": \"CD\",\n  \"province\": { \"id\": {{provinceId}} },\n  \"entite\": null,\n  \"commune\": null\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Register (CB - avec province + entite)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "auth", "register" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"cb_entite\",\n  \"password\": \"cb123\",\n  \"role\": \"CB\",\n  \"province\": { \"id\": {{provinceId}} },\n  \"entite\": { \"id\": {{entiteId}} },\n  \"commune\": null\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Register (OEC - avec province + entite + commune)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "auth", "register" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"oec_commune\",\n  \"password\": \"oec123\",\n  \"role\": \"OEC\",\n  \"province\": { \"id\": {{provinceId}} },\n  \"entite\": { \"id\": {{entiteId}} },\n  \"commune\": { \"id\": {{communeId}} }\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Login (définit {{token}})",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "try {",
+                  "  const json = pm.response.json();",
+                  "  if (json && json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "  }",
+                  "} catch (e) {}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "auth", "login" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "auth", "me" ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Personnes",
+      "item": [
+        {
+          "name": "Créer une personne",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/personnes",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"KABAMBA\",\n  \"postnom\": \"MULUMBA\",\n  \"prenom\": \"Jean\",\n  \"sexe\": \"MASCULIN\",\n  \"lieuNaiss\": \"Kinshasa\",\n  \"dateNaissance\": \"1990-05-12\",\n  \"heureNaissance\": \"06:15:00\",\n  \"profession\": \"Ingénieur\",\n  \"nationalite\": \"Congolaise\",\n  \"communeChefferie\": \"Gombe\",\n  \"quartierGroup\": \"Centre\",\n  \"avenueVillage\": \"Boulevard du 30 Juin\",\n  \"celluleLocalite\": \"Cellule 1\",\n  \"telephone\": \"+243812345678\",\n  \"email\": \"jean.kabamba@example.com\",\n  \"pereId\": null,\n  \"mereId\": null,\n  \"statut\": \"VIVANT\",\n  \"situationMatrimoniale\": \"CELIBATAIRE\"\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Créer personnes en lot (batch)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/personnes/batch",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "batch" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"personnes\": [\n    {\n      \"nom\": \"KABAMBA\",\n      \"postnom\": \"MULUMBA\",\n      \"prenom\": \"Jean\",\n      \"sexe\": \"MASCULIN\",\n      \"dateNaissance\": \"1990-05-12\",\n      \"telephone\": \"+243812345678\",\n      \"statut\": \"VIVANT\",\n      \"situationMatrimoniale\": \"CELIBATAIRE\"\n    },\n    {\n      \"nom\": \"NGOMA\",\n      \"postnom\": \"KASONGO\",\n      \"prenom\": \"Aline\",\n      \"sexe\": \"FEMININ\",\n      \"dateNaissance\": \"1994-11-02\",\n      \"telephone\": \"+243813333333\",\n      \"statut\": \"VIVANT\",\n      \"situationMatrimoniale\": \"CELIBATAIRE\"\n    }\n  ]\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Lister personnes (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personnes?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Rechercher par nom (terme)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personnes/rechercher?terme=kab",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "rechercher" ],
+              "query": [
+                { "key": "terme", "value": "kab" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Recherche avancée (POST /recherche-avancee)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/personnes/recherche-avancee",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "recherche-avancee" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"KABAMBA\",\n  \"sexe\": \"MASCULIN\",\n  \"statut\": \"VIVANT\",\n  \"situationMatrimoniale\": \"CELIBATAIRE\",\n  \"dateNaissanceDebut\": \"1980-01-01\",\n  \"dateNaissanceFin\": \"2005-12-31\",\n  \"page\": 0,\n  \"size\": 20,\n  \"sortBy\": \"nom\",\n  \"sortDirection\": \"ASC\"\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Recherche multicritères (GET /recherche-multicriteres)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personnes/recherche-multicriteres?nom=KABAMBA&sexe=MASCULIN&page=0&size=20&sortBy=nom&sortDirection=ASC",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "recherche-multicriteres" ],
+              "query": [
+                { "key": "nom", "value": "KABAMBA" },
+                { "key": "sexe", "value": "MASCULIN" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" },
+                { "key": "sortBy", "value": "nom" },
+                { "key": "sortDirection", "value": "ASC" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Statistiques générales",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personnes/statistiques/generales",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "statistiques", "generales" ]
+            }
+          }
+        },
+        {
+          "name": "Statistiques par commune",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personnes/statistiques/par-commune",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "statistiques", "par-commune" ]
+            }
+          }
+        },
+        {
+          "name": "Statistiques par sexe",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personnes/statistiques/par-sexe",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "statistiques", "par-sexe" ]
+            }
+          }
+        },
+        {
+          "name": "Enums (Sexe/Statut/SituationMatrimoniale)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personnes/enums",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "enums" ]
+            }
+          }
+        },
+        {
+          "name": "Obtenir une personne (GET /personnes/id/{id})",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personnes/id/{{personneId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "id", "{{personneId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Modifier une personne (PUT /personnes/{id})",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/personnes/{{personneId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "{{personneId}}" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"KABAMBA\",\n  \"postnom\": \"MULUMBA\",\n  \"prenom\": \"Jean\",\n  \"sexe\": \"MASCULIN\",\n  \"lieuNaiss\": \"Kinshasa\",\n  \"dateNaissance\": \"1990-05-12\",\n  \"profession\": \"Architecte\",\n  \"nationalite\": \"Congolaise\",\n  \"telephone\": \"+243812345678\",\n  \"email\": \"jean.kabamba@example.com\",\n  \"pereId\": null,\n  \"mereId\": null,\n  \"statut\": \"VIVANT\",\n  \"situationMatrimoniale\": \"CELIBATAIRE\"\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Supprimer une personne (DELETE /personnes/{id})",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/personnes/{{personneId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "{{personneId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Obtenir enfants (GET /personnes/{id}/enfants)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personnes/{{personneId}}/enfants?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "{{personneId}}", "enfants" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtenir personne simple (GET /personnes/{id}/simple)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personnes/{{personneId}}/simple",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "{{personneId}}", "simple" ]
+            }
+          }
+        },
+        {
+          "name": "Changer statut (PUT /personnes/{id}/statut)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/personnes/{{personneId}}/statut",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "{{personneId}}", "statut" ]
+            },
+            "body": { "mode": "raw", "raw": "{\n  \"statut\": \"DECEDE\"\n}\n" }
+          }
+        },
+        {
+          "name": "Changer situation matrimoniale (PUT /personnes/{id}/situation-matrimoniale)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/personnes/{{personneId}}/situation-matrimoniale",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "{{personneId}}", "situation-matrimoniale" ]
+            },
+            "body": { "mode": "raw", "raw": "{\n  \"situationMatrimoniale\": \"MARIE\"\n}\n" }
+          }
+        },
+        {
+          "name": "Vérifier existence (GET /personnes/{id}/existe)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/personnes/{{personneId}}/existe",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "personnes", "{{personneId}}", "existe" ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Actes de naissance",
+      "item": [
+        {
+          "name": "Créer un acte",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numeroActe\": \"AN-2026-0001\",\n  \"enfantId\": {{personneId}},\n  \"communeId\": {{communeId}},\n  \"officier\": \"OEC MUKENDI\",\n  \"declarant\": \"KABAMBA MULUMBA\",\n  \"dateEnregistrement\": \"2026-03-18\",\n  \"temoin1\": \"TEMOIN 1\",\n  \"temoin2\": \"TEMOIN 2\"\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Obtenir acte par id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/{{acteNaissanceId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "{{acteNaissanceId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Mettre à jour acte (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/{{acteNaissanceId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "{{acteNaissanceId}}" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"officier\": \"OEC KALALA\",\n  \"declarant\": \"DECLARANT MODIFIE\",\n  \"dateEnregistrement\": \"2026-03-18\",\n  \"temoin1\": \"TEMOIN A\",\n  \"temoin2\": \"TEMOIN B\"\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Supprimer acte (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/{{acteNaissanceId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "{{acteNaissanceId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Lister actes (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Rechercher par numéro",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/numero/{{numeroActe}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "numero", "{{numeroActe}}" ]
+            }
+          }
+        },
+        {
+          "name": "Rechercher par nom enfant",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/enfant/nom?terme=kab&page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "enfant", "nom" ],
+              "query": [
+                { "key": "terme", "value": "kab" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtenir acte par enfantId",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/enfant/{{personneId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "enfant", "{{personneId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par commune (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/commune/{{communeId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "commune", "{{communeId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par commune",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/commune/{{communeId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "commune", "{{communeId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par entité (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/entite/{{entiteId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "entite", "{{entiteId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par entité",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/entite/{{entiteId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "entite", "{{entiteId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par province (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/province/{{provinceId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "province", "{{provinceId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/province/{{provinceId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "province", "{{provinceId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Créer actes en lot (POST /lot)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/lot",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "lot" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actes\": [\n    {\n      \"numeroActe\": \"AN-2026-0100\",\n      \"enfantId\": {{personneId}},\n      \"communeId\": {{communeId}},\n      \"officier\": \"OEC MUKENDI\",\n      \"declarant\": \"DECLARANT 1\",\n      \"dateEnregistrement\": \"2026-03-18\",\n      \"temoin1\": \"TEMOIN 1\",\n      \"temoin2\": \"TEMOIN 2\",\n      \"numeroOrdre\": 1,\n      \"reference\": \"REF-AN-0100\"\n    }\n  ],\n  \"descriptionLot\": \"Lot de test actes naissance\",\n  \"responsableLot\": \"RESP LOT\",\n  \"dateTraitement\": \"2026-03-18\",\n  \"validationStricte\": true\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Valider lot (POST /lot/validation)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/lot/validation",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "lot", "validation" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actes\": [\n    {\n      \"numeroActe\": \"AN-2026-0100\",\n      \"enfantId\": {{personneId}},\n      \"communeId\": {{communeId}},\n      \"officier\": \"OEC MUKENDI\",\n      \"dateEnregistrement\": \"2026-03-18\",\n      \"numeroOrdre\": 1,\n      \"reference\": \"REF-AN-0100\"\n    }\n  ],\n  \"validationComplete\": true\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Vérifier numéro acte",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/verification/numero/{{numeroActe}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "verification", "numero", "{{numeroActe}}" ]
+            }
+          }
+        },
+        {
+          "name": "Vérifier enfant a déjà un acte",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/verification/enfant/{{personneId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "verification", "enfant", "{{personneId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Obtenir acte simple",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/{{acteNaissanceId}}/simple",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "{{acteNaissanceId}}", "simple" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par sexe (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/sexe/MASCULIN?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "sexe", "MASCULIN" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par sexe",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/sexe/MASCULIN/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "sexe", "MASCULIN", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par sexe + province (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/sexe/MASCULIN/province/{{provinceId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "sexe", "MASCULIN", "province", "{{provinceId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par sexe + province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/sexe/MASCULIN/province/{{provinceId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "sexe", "MASCULIN", "province", "{{provinceId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par sexe + entité (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/sexe/MASCULIN/entite/{{entiteId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "sexe", "MASCULIN", "entite", "{{entiteId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par sexe + entité",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/sexe/MASCULIN/entite/{{entiteId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "sexe", "MASCULIN", "entite", "{{entiteId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par sexe + commune (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/sexe/MASCULIN/commune/{{communeId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "sexe", "MASCULIN", "commune", "{{communeId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par sexe + commune",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/sexe/MASCULIN/commune/{{communeId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "sexe", "MASCULIN", "commune", "{{communeId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "PDF acte (par id)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/pdf" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/{{acteNaissanceId}}/pdf",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "{{acteNaissanceId}}", "pdf" ]
+            }
+          }
+        },
+        {
+          "name": "PDF acte (par numéro)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/pdf" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/numero/{{numeroActe}}/pdf",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "numero", "{{numeroActe}}", "pdf" ]
+            }
+          }
+        },
+        {
+          "name": "PDF acte (par enfantId)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/pdf" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-naissance/enfant/{{personneId}}/pdf",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-naissance", "enfant", "{{personneId}}", "pdf" ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Actes de décès",
+      "item": [
+        {
+          "name": "Créer un acte",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numeroActe\": \"AD-2026-0001\",\n  \"defuntId\": {{personneId}},\n  \"communeId\": {{communeId}},\n  \"dateDeces\": \"2026-03-10\",\n  \"heureDeces\": \"14:30\",\n  \"lieuDeces\": \"Hôpital Général\",\n  \"causeDeces\": \"Maladie\",\n  \"officier\": \"OEC MUKENDI\",\n  \"declarant\": \"DECLARANT\",\n  \"dateEnregistrement\": \"2026-03-18\",\n  \"temoin1\": \"TEMOIN 1\",\n  \"temoin2\": \"TEMOIN 2\",\n  \"medecin\": \"Dr. LUMUMBA\",\n  \"observations\": \"RAS\"\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Obtenir acte par id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/{{acteDecesId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "{{acteDecesId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Mettre à jour acte (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/{{acteDecesId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "{{acteDecesId}}" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"officier\": \"OEC KALALA\",\n  \"lieuDeces\": \"Clinique\",\n  \"causeDeces\": \"Cause modifiée\",\n  \"declarant\": \"DECLARANT MODIFIE\",\n  \"temoin1\": \"TEMOIN A\",\n  \"temoin2\": \"TEMOIN B\",\n  \"medecin\": \"Dr. MODIFIE\",\n  \"observations\": \"Observation modifiée\"\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Supprimer acte (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/{{acteDecesId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "{{acteDecesId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Lister actes (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Rechercher par numéro",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/numero/AD-2026-0001",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "numero", "AD-2026-0001" ]
+            }
+          }
+        },
+        {
+          "name": "Rechercher par nom défunt",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/defunt/nom?terme=kab&page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "defunt", "nom" ],
+              "query": [
+                { "key": "terme", "value": "kab" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtenir acte par defuntId",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/defunt/{{personneId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "defunt", "{{personneId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par commune (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/commune/{{communeId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "commune", "{{communeId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par commune",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/commune/{{communeId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "commune", "{{communeId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par entité (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/entite/{{entiteId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "entite", "{{entiteId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par entité",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/entite/{{entiteId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "entite", "{{entiteId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par province (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/province/{{provinceId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "province", "{{provinceId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/province/{{provinceId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "province", "{{provinceId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Créer actes en lot (POST /lot)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/lot",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "lot" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actes\": [\n    {\n      \"numeroActe\": \"AD-2026-0100\",\n      \"defuntId\": {{personneId}},\n      \"communeId\": {{communeId}},\n      \"dateDeces\": \"2026-03-10\",\n      \"heureDeces\": \"14:30\",\n      \"lieuDeces\": \"Hôpital Général\",\n      \"causeDeces\": \"Maladie\",\n      \"officier\": \"OEC MUKENDI\",\n      \"dateEnregistrement\": \"2026-03-18\",\n      \"numeroOrdre\": 1,\n      \"reference\": \"REF-AD-0100\"\n    }\n  ],\n  \"descriptionLot\": \"Lot de test actes décès\",\n  \"responsableLot\": \"RESP LOT\",\n  \"dateTraitement\": \"2026-03-18\",\n  \"validationStricte\": true\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Valider lot (POST /lot/validation)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/lot/validation",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "lot", "validation" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actes\": [\n    {\n      \"numeroActe\": \"AD-2026-0100\",\n      \"defuntId\": {{personneId}},\n      \"communeId\": {{communeId}},\n      \"dateDeces\": \"2026-03-10\",\n      \"lieuDeces\": \"Hôpital Général\",\n      \"officier\": \"OEC MUKENDI\",\n      \"dateEnregistrement\": \"2026-03-18\",\n      \"numeroOrdre\": 1,\n      \"reference\": \"REF-AD-0100\"\n    }\n  ],\n  \"validationComplete\": true\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Vérifier numéro acte",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/verification/numero/AD-2026-0001",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "verification", "numero", "AD-2026-0001" ]
+            }
+          }
+        },
+        {
+          "name": "Vérifier défunt a déjà un acte",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/verification/defunt/{{personneId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "verification", "defunt", "{{personneId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Obtenir acte simple",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/{{acteDecesId}}/simple",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "{{acteDecesId}}", "simple" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par sexe (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/sexe/MASCULIN?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "sexe", "MASCULIN" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par sexe",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/sexe/MASCULIN/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "sexe", "MASCULIN", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par sexe + province (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/sexe/MASCULIN/province/{{provinceId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "sexe", "MASCULIN", "province", "{{provinceId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par sexe + province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/sexe/MASCULIN/province/{{provinceId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "sexe", "MASCULIN", "province", "{{provinceId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par sexe + entité (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/sexe/MASCULIN/entite/{{entiteId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "sexe", "MASCULIN", "entite", "{{entiteId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par sexe + entité",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/sexe/MASCULIN/entite/{{entiteId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "sexe", "MASCULIN", "entite", "{{entiteId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par sexe + commune (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/sexe/MASCULIN/commune/{{communeId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "sexe", "MASCULIN", "commune", "{{communeId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par sexe + commune",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/sexe/MASCULIN/commune/{{communeId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "sexe", "MASCULIN", "commune", "{{communeId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Statistiques",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/statistiques",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "statistiques" ]
+            }
+          }
+        },
+        {
+          "name": "Recherche multicritères (POST /recherche)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-deces/recherche",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-deces", "recherche" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nomDefunt\": \"KABAMBA\",\n  \"sexeDefunt\": \"MASCULIN\",\n  \"provinceId\": {{provinceId}},\n  \"dateDecesDebut\": \"2026-01-01\",\n  \"dateDecesFin\": \"2026-12-31\",\n  \"page\": 0,\n  \"size\": 20,\n  \"sortBy\": \"dateEnregistrement\",\n  \"sortDirection\": \"DESC\"\n}\n"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Actes de mariage",
+      "item": [
+        {
+          "name": "Créer un acte",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numeroActe\": \"AM-2026-0001\",\n  \"epouxId\": {{personneId}},\n  \"epouseId\": 2,\n  \"communeId\": {{communeId}},\n  \"dateMariage\": \"2026-03-01\",\n  \"lieuMariage\": \"Commune de Gombe\",\n  \"regimeMatrimonial\": \"COMMUNAUTE_LEGALE\",\n  \"officier\": \"OEC MUKENDI\",\n  \"temoin1\": \"TEMOIN 1\",\n  \"temoin2\": \"TEMOIN 2\"\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Obtenir acte par id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/{{acteMariageId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "{{acteMariageId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Mettre à jour acte (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/{{acteMariageId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "{{acteMariageId}}" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"officier\": \"OEC KALALA\",\n  \"lieuMariage\": \"Paroisse Saint Paul\",\n  \"regimeMatrimonial\": \"SEPARATION_BIENS\",\n  \"temoin1\": \"TEMOIN A\",\n  \"temoin2\": \"TEMOIN B\"\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Supprimer acte (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/{{acteMariageId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "{{acteMariageId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Lister actes (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Rechercher par numéro",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/numero/AM-2026-0001",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "numero", "AM-2026-0001" ]
+            }
+          }
+        },
+        {
+          "name": "Rechercher par nom époux",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/epoux/nom?terme=kab&page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "epoux", "nom" ],
+              "query": [
+                { "key": "terme", "value": "kab" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Rechercher par nom épouse",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/epouse/nom?terme=ali&page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "epouse", "nom" ],
+              "query": [
+                { "key": "terme", "value": "ali" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Rechercher par nom (époux ou épouse)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/nom?terme=kab&page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "nom" ],
+              "query": [
+                { "key": "terme", "value": "kab" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mariages par personneId",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/personne/{{personneId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "personne", "{{personneId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Dernier mariage par personneId",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/personne/{{personneId}}/dernier",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "personne", "{{personneId}}", "dernier" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par commune (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/commune/{{communeId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "commune", "{{communeId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par commune",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/commune/{{communeId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "commune", "{{communeId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par entité (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/entite/{{entiteId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "entite", "{{entiteId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par entité",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/entite/{{entiteId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "entite", "{{entiteId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par province (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/province/{{provinceId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "province", "{{provinceId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/province/{{provinceId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "province", "{{provinceId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Créer actes en lot (POST /lot)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/lot",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "lot" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actes\": [\n    {\n      \"numeroActe\": \"AM-2026-0100\",\n      \"epouxId\": {{personneId}},\n      \"epouseId\": 2,\n      \"communeId\": {{communeId}},\n      \"dateMariage\": \"2026-03-01\",\n      \"lieuMariage\": \"Commune de Gombe\",\n      \"regimeMatrimonial\": \"COMMUNAUTE_LEGALE\",\n      \"officier\": \"OEC MUKENDI\",\n      \"temoin1\": \"TEMOIN 1\",\n      \"temoin2\": \"TEMOIN 2\",\n      \"numeroOrdre\": 1,\n      \"reference\": \"REF-AM-0100\"\n    }\n  ]\n}\n"
+            }
+          }
+        },
+        {
+          "name": "Vérifier numéro acte",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/verification/numero/AM-2026-0001",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "verification", "numero", "AM-2026-0001" ]
+            }
+          }
+        },
+        {
+          "name": "Vérifier personne mariée",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/verification/personne/{{personneId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "verification", "personne", "{{personneId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Obtenir acte simple",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/{{acteMariageId}}/simple",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "{{acteMariageId}}", "simple" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par sexe époux (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/sexe/epoux/MASCULIN?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "sexe", "epoux", "MASCULIN" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actes par sexe épouse (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/sexe/epouse/FEMININ?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "sexe", "epouse", "FEMININ" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par sexe époux",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/sexe/epoux/MASCULIN/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "sexe", "epoux", "MASCULIN", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par sexe épouse",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/sexe/epouse/FEMININ/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "sexe", "epouse", "FEMININ", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes époux par sexe + province (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/sexe/epoux/MASCULIN/province/{{provinceId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "sexe", "epoux", "MASCULIN", "province", "{{provinceId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actes épouse par sexe + province (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/sexe/epouse/FEMININ/province/{{provinceId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "sexe", "epouse", "FEMININ", "province", "{{provinceId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes époux sexe + province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/sexe/epoux/MASCULIN/province/{{provinceId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "sexe", "epoux", "MASCULIN", "province", "{{provinceId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes épouse sexe + province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/sexe/epouse/FEMININ/province/{{provinceId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "sexe", "epouse", "FEMININ", "province", "{{provinceId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par régime matrimonial (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/regime/COMMUNAUTE_LEGALE?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "regime", "COMMUNAUTE_LEGALE" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par régime matrimonial",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/regime/COMMUNAUTE_LEGALE/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "regime", "COMMUNAUTE_LEGALE", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes régime + province (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/regime/COMMUNAUTE_LEGALE/province/{{provinceId}}?page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "regime", "COMMUNAUTE_LEGALE", "province", "{{provinceId}}" ],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes régime + province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/regime/COMMUNAUTE_LEGALE/province/{{provinceId}}/count",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "regime", "COMMUNAUTE_LEGALE", "province", "{{provinceId}}", "count" ]
+            }
+          }
+        },
+        {
+          "name": "Actes par période (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/periode?dateDebut=2026-01-01&dateFin=2026-12-31&page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "periode" ],
+              "query": [
+                { "key": "dateDebut", "value": "2026-01-01" },
+                { "key": "dateFin", "value": "2026-12-31" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes par période",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/periode/count?dateDebut=2026-01-01&dateFin=2026-12-31",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "periode", "count" ],
+              "query": [
+                { "key": "dateDebut", "value": "2026-01-01" },
+                { "key": "dateFin", "value": "2026-12-31" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actes période + province (pagination)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/periode/province/{{provinceId}}?dateDebut=2026-01-01&dateFin=2026-12-31&page=0&size=20",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "periode", "province", "{{provinceId}}" ],
+              "query": [
+                { "key": "dateDebut", "value": "2026-01-01" },
+                { "key": "dateFin", "value": "2026-12-31" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Compter actes période + province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/periode/province/{{provinceId}}/count?dateDebut=2026-01-01&dateFin=2026-12-31",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "periode", "province", "{{provinceId}}", "count" ],
+              "query": [
+                { "key": "dateDebut", "value": "2026-01-01" },
+                { "key": "dateFin", "value": "2026-12-31" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Statistiques",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/statistiques",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "statistiques" ]
+            }
+          }
+        },
+        {
+          "name": "Recherche multicritères (POST /recherche)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/actes-mariage/recherche",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "actes-mariage", "recherche" ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nomEpoux\": \"KABAMBA\",\n  \"nomEpouse\": \"NGOMA\",\n  \"regimeMatrimonial\": \"COMMUNAUTE_LEGALE\",\n  \"provinceId\": {{provinceId}},\n  \"dateMariageDebut\": \"2026-01-01\",\n  \"dateMariageFin\": \"2026-12-31\",\n  \"page\": 0,\n  \"size\": 20,\n  \"sortBy\": \"dateMariage\",\n  \"sortDirection\": \"DESC\"\n}\n"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Territoire",
+      "item": [
+        {
+          "name": "Provinces - all",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/territoire/province/all",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "territoire", "province", "all" ]
+            }
+          }
+        },
+        {
+          "name": "Entités - all",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/territoire/entite/all",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "territoire", "entite", "all" ]
+            }
+          }
+        },
+        {
+          "name": "Entités par province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/territoire/entite/province/{{provinceId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "territoire", "entite", "province", "{{provinceId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Communes - all",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/territoire/commune/all",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "territoire", "commune", "all" ]
+            }
+          }
+        },
+        {
+          "name": "Communes par entité",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/territoire/commune/entite/{{entiteId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "territoire", "commune", "entite", "{{entiteId}}" ]
+            }
+          }
+        },
+        {
+          "name": "Quartiers - all",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/territoire/quartier/all",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "territoire", "quartier", "all" ]
+            }
+          }
+        },
+        {
+          "name": "Quartiers par commune",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/territoire/quartier/commune/{{communeId}}",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "territoire", "quartier", "commune", "{{communeId}}" ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+

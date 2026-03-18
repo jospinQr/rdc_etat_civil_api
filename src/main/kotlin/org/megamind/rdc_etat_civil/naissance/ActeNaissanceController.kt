@@ -6,7 +6,7 @@ import org.apache.coyote.BadRequestException
 import org.megamind.rdc_etat_civil.naissance.dto.*
 import org.megamind.rdc_etat_civil.naissance.pdf.ActeNaissancePdfService
 import org.megamind.rdc_etat_civil.personne.Sexe
-import org.springframework.data.domain.Page
+import org.megamind.rdc_etat_civil.utils.PaginatedResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -124,7 +124,7 @@ class ActeNaissanceController(
     fun listerActes(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<Page<ActeNaissanceSimple>> {
+    ): ResponseEntity<PaginatedResponse<ActeNaissanceSimple>> {
         if (page < 0) {
             throw BadRequestException("Le numéro de page ne peut pas être négatif")
         }
@@ -134,7 +134,7 @@ class ActeNaissanceController(
         }
         
         val actes = acteNaissanceService.listerActesNaissance(page, size)
-        return ResponseEntity.ok(actes)
+        return ResponseEntity.ok(PaginatedResponse.fromPage(actes))
     }
 
     /**
@@ -164,7 +164,7 @@ class ActeNaissanceController(
         @RequestParam terme: String,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<Page<ActeNaissanceSimple>> {
+    ): ResponseEntity<PaginatedResponse<ActeNaissanceSimple>> {
         if (terme.isBlank()) {
             throw BadRequestException("Le terme de recherche ne peut pas être vide")
         }
@@ -182,7 +182,7 @@ class ActeNaissanceController(
         }
         
         val actes = acteNaissanceService.rechercherParNomEnfant(terme, page, size)
-        return ResponseEntity.ok(actes)
+        return ResponseEntity.ok(PaginatedResponse.fromPage(actes))
     }
 
     /**
@@ -212,7 +212,7 @@ class ActeNaissanceController(
         @PathVariable communeId: Long,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<Page<ActeNaissanceSimple>> {
+    ): ResponseEntity<PaginatedResponse<ActeNaissanceSimple>> {
         if (communeId <= 0) {
             throw BadRequestException("L'ID de la commune doit être un nombre positif")
         }
@@ -226,7 +226,7 @@ class ActeNaissanceController(
         }
         
         val actes = acteNaissanceService.obtenirActesParCommune(communeId, page, size)
-        return ResponseEntity.ok(actes)
+        return ResponseEntity.ok(PaginatedResponse.fromPage(actes))
     }
 
     /**
@@ -257,7 +257,7 @@ class ActeNaissanceController(
         @PathVariable entiteId: Long,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<Page<ActeNaissanceSimple>> {
+    ): ResponseEntity<PaginatedResponse<ActeNaissanceSimple>> {
         if (entiteId <= 0) {
             throw BadRequestException("L'ID de l'entité doit être un nombre positif")
         }
@@ -271,7 +271,7 @@ class ActeNaissanceController(
         }
         
         val actes = acteNaissanceService.obtenirActesParEntite(entiteId, page, size)
-        return ResponseEntity.ok(actes)
+        return ResponseEntity.ok(PaginatedResponse.fromPage(actes))
     }
 
     /**
@@ -302,7 +302,7 @@ class ActeNaissanceController(
         @PathVariable provinceId: Long,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<Page<ActeNaissanceSimple>> {
+    ): ResponseEntity<PaginatedResponse<ActeNaissanceSimple>> {
         if (provinceId <= 0) {
             throw BadRequestException("L'ID de la province doit être un nombre positif")
         }
@@ -316,7 +316,7 @@ class ActeNaissanceController(
         }
         
         val actes = acteNaissanceService.obtenirActesParProvince(provinceId, page, size)
-        return ResponseEntity.ok(actes)
+        return ResponseEntity.ok(PaginatedResponse.fromPage(actes))
     }
 
     /**
@@ -458,7 +458,7 @@ class ActeNaissanceController(
         @PathVariable sexe: Sexe,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<Page<ActeNaissanceSimple>> {
+    ): ResponseEntity<PaginatedResponse<ActeNaissanceSimple>> {
         if (page < 0) {
             throw BadRequestException("Le numéro de page ne peut pas être négatif")
         }
@@ -468,7 +468,7 @@ class ActeNaissanceController(
         }
         
         val actes = acteNaissanceService.obtenirActesParSexe(sexe, page, size)
-        return ResponseEntity.ok(actes)
+        return ResponseEntity.ok(PaginatedResponse.fromPage(actes))
     }
 
     /**
@@ -496,7 +496,7 @@ class ActeNaissanceController(
         @PathVariable provinceId: Long,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<Page<ActeNaissanceSimple>> {
+    ): ResponseEntity<PaginatedResponse<ActeNaissanceSimple>> {
         if (provinceId <= 0) {
             throw BadRequestException("L'ID de la province doit être un nombre positif")
         }
@@ -510,7 +510,7 @@ class ActeNaissanceController(
         }
         
         val actes = acteNaissanceService.obtenirActesParSexeEtProvince(sexe, provinceId, page, size)
-        return ResponseEntity.ok(actes)
+        return ResponseEntity.ok(PaginatedResponse.fromPage(actes))
     }
 
     /**
@@ -546,7 +546,7 @@ class ActeNaissanceController(
         @PathVariable entiteId: Long,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<Page<ActeNaissanceSimple>> {
+    ): ResponseEntity<PaginatedResponse<ActeNaissanceSimple>> {
         if (entiteId <= 0) {
             throw BadRequestException("L'ID de l'entité doit être un nombre positif")
         }
@@ -560,7 +560,7 @@ class ActeNaissanceController(
         }
         
         val actes = acteNaissanceService.obtenirActesParSexeEtEntite(sexe, entiteId, page, size)
-        return ResponseEntity.ok(actes)
+        return ResponseEntity.ok(PaginatedResponse.fromPage(actes))
     }
 
     /**
@@ -596,7 +596,7 @@ class ActeNaissanceController(
         @PathVariable communeId: Long,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<Page<ActeNaissanceSimple>> {
+    ): ResponseEntity<PaginatedResponse<ActeNaissanceSimple>> {
         if (communeId <= 0) {
             throw BadRequestException("L'ID de la commune doit être un nombre positif")
         }
@@ -610,7 +610,7 @@ class ActeNaissanceController(
         }
         
         val actes = acteNaissanceService.obtenirActesParSexeEtCommune(sexe, communeId, page, size)
-        return ResponseEntity.ok(actes)
+        return ResponseEntity.ok(PaginatedResponse.fromPage(actes))
     }
 
     /**
