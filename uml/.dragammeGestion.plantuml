@@ -1,0 +1,33 @@
+@startuml
+left to right direction
+
+actor "Agent de saisie" as Agent
+actor "Officier état civil" as OEC
+
+rectangle "Gestion État Civil" {
+
+    usecase "S’authentifier" as Auth
+
+    usecase "Gérer naissance" as Naissance
+    usecase "Gérer mariage" as Mariage
+    usecase "Gérer décès" as Deces
+
+    usecase "Naissance hors délai" as HorsDelai
+}
+
+Agent --> Naissance
+Agent --> Mariage
+Agent --> Deces
+
+OEC --> Naissance
+OEC --> Mariage
+OEC --> Deces
+
+Naissance .> Auth : <<include>>
+Mariage .> Auth : <<include>>
+Deces .> Auth : <<include>>
+
+HorsDelai .> Naissance : <<extend>>
+
+@enduml
+

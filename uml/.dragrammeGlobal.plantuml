@@ -1,0 +1,33 @@
+@startuml
+left to right direction
+
+actor "Agent de saisie" as Agent
+actor "Officier état civil" as OEC
+actor "Chef de Bureau" as CB
+actor "Chef de Division" as CD
+
+rectangle "Système État Civil" {
+    usecase "Gérer état civil" as UC1
+    usecase "Générer acte" as UC2
+    usecase "Consulter actes" as UC3
+    usecase "Valider actes" as UC4
+    usecase "S’authentifier" as UC5
+}
+
+Agent --> UC1
+Agent --> UC2
+Agent --> UC5
+
+OEC --> UC4
+OEC --> UC3
+OEC --> UC5
+
+CD --> UC3
+CB --> UC3
+
+UC1 .> UC5 : <<include>>
+UC2 .> UC5 : <<include>>
+UC3 .> UC5 : <<include>>
+UC4 .> UC5 : <<include>>
+
+@enduml

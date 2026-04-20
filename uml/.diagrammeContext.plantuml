@@ -1,0 +1,23 @@
+@startuml
+skinparam actorStyle awesome
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam backgroundColor white
+skinparam rectangleBackgroundColor #EEEDFE
+skinparam rectangleBorderColor #5B50B0
+
+rectangle "Système digital État Civil RDC" as SYS #EEEDFE
+
+actor "Agent de saisi" as CIT
+actor "OEC\n(Officier État Civil)" as OEC
+actor "Chef de Bureau\n(Niveau Entité/Ville)" as CB
+actor "Chef de Division\n(Niveau Province)" as CD
+actor "Administrateur\n(Global)" as ADMIN
+
+CIT  --> SYS : Encode les données
+OEC  --> SYS : Signe & valide
+CB   --> SYS : Supervise entité\nConsulte statistiques
+CD   --> SYS : Supervise province\nConsulte statistiques
+ADMIN --> SYS : Gère utilisateurs\nConfigure territoires
+
+@enduml

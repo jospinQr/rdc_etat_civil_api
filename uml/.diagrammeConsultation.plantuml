@@ -1,0 +1,34 @@
+@startuml
+left to right direction
+
+actor "Utilisateur" as User
+actor "Officier état civil" as OEC
+actor "Chef de Bureau" as CB
+actor "Chef de Division" as CDIV
+
+User <|-- OEC
+User <|-- CB
+User <|-- CDIV
+
+rectangle "Consultation & Documents" {
+
+    usecase "S’authentifier" as Auth
+
+    usecase "Consulter naissance" as CN
+    usecase "Consulter mariage" as CM
+    usecase "Consulter décès" as CD
+
+    usecase "Générer acte" as Gen
+}
+
+User --> CN
+User --> CM
+User --> CD
+OEC --> Gen
+
+CN .> Auth : <<include>>
+CM .> Auth : <<include>>
+CD .> Auth : <<include>>
+Gen .> Auth : <<include>>
+
+@enduml

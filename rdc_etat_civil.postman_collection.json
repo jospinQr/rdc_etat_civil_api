@@ -1877,6 +1877,126 @@
           }
         }
       ]
+    },
+    {
+      "name": "Statistiques",
+      "item": [
+        {
+          "name": "Statistiques Générales (Mois en cours)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/statistiques",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "statistiques"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Statistiques par Période et Groupement",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/statistiques?dateDebut=2024-01-01&dateFin=2024-12-31&grouperPar=PROVINCE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "statistiques"
+              ],
+              "query": [
+                {
+                  "key": "dateDebut",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "dateFin",
+                  "value": "2024-12-31"
+                },
+                {
+                  "key": "grouperPar",
+                  "value": "PROVINCE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Statistiques Dashboard CD (Province)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/statistiques?provinceId={{provinceId}}&grouperPar=ENTITE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "statistiques"
+              ],
+              "query": [
+                {
+                  "key": "provinceId",
+                  "value": "{{provinceId}}"
+                },
+                {
+                  "key": "grouperPar",
+                  "value": "ENTITE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Statistiques Dashboard CB (Entité)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/statistiques?entiteId={{entiteId}}&grouperPar=COMMUNE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "statistiques"
+              ],
+              "query": [
+                {
+                  "key": "entiteId",
+                  "value": "{{entiteId}}"
+                },
+                {
+                  "key": "grouperPar",
+                  "value": "COMMUNE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Statistiques Dashboard OEC (Commune)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/statistiques?communeId={{communeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "statistiques"
+              ],
+              "query": [
+                {
+                  "key": "communeId",
+                  "value": "{{communeId}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
     }
   ]
 }

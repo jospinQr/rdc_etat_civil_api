@@ -1,0 +1,235 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classBorderRadius 8
+skinparam classBackgroundColor #F8F9FF
+skinparam classBorderColor #5B50B0
+skinparam classHeaderBackgroundColor #EEEDFE
+skinparam arrowColor #444
+skinparam stereotypeCBackgroundColor #9FE1CB
+skinparam stereotypeEBackgroundColor #FAC775
+
+' ═══════════════════════════════════════════
+'  ENUMS — Personne
+' ═══════════════════════════════════════════
+
+enum Sexe {
+    MASCULIN
+    FEMININ
+}
+
+enum StatutPersonne {
+    VIVANT
+    DECEDE
+    INCONNU
+}
+
+enum SituationMatrimoniale {
+    CELIBATAIRE
+    MARIE
+    VEUF
+    DIVORCE
+    SEPARE
+}
+
+enum RegimeMatrimonial {
+    COMMUNAUTE_LEGALE
+    COMMUNAUTE_UNIVERSELLE
+    SEPARATION_BIENS
+    PARTICIPATION_AUX_ACQUETS
+    COMMUNAUTE_REDUITE_AUX_ACQUETS
+    REGIME_MIXTE
+    CONVENTION_PARTICULIERE
+    INCONNU
+}
+
+' ═══════════════════════════════════════════
+'  ENUM — Role utilisateur
+' ═══════════════════════════════════════════
+
+enum Role {
+    ADMIN
+    OEC
+    CB
+    CD
+}
+
+note right of Role
+  ADMIN → Administrateur système (global)
+  OEC   → Officier État Civil (Commune)
+  CB    → Chef de Bureau (Entité/Ville)
+  CD    → Chef de Division (Province)
+end note
+
+' ═══════════════════════════════════════════
+'  HIÉRARCHIE TERRITORIALE
+' ═══════════════════════════════════════════
+
+class Province <<Entity>> {
+    + id : Long?
+    + designation : String
+}
+
+class Entite <<Entity>> {
+    + id : Long?
+    + designation : String
+    + estVille : Boolean
+}
+
+note right of Entite
+  estVille = true  → Ville
+  estVille = false → Territoire
+end note
+
+class Commune <<Entity>> {
+    + id : Long?
+    + designation : String
+}
+
+Province "1" <-- "0..*" Entite  : appartient à
+Entite  "1" <-- "0..*" Commune : appartient à
+
+' ═══════════════════════════════════════════
+'  ENTITÉ : User
+' ═══════════════════════════════════════════
+
+class User <<Entity>> {
+    + id : Long
+    + username : String
+    + password : String
+    + role : Role
+}
+
+User --> Role
+
+User "0..*" --> "0..1" Province : périmètre (CD)
+User "0..*" --> "0..1" Entite   : périmètre (CB)
+User "0..*" --> "0..1" Commune  : périmètre (OEC)
+
+note bottom of User
+  Un seul périmètre actif selon le rôle :
+  ADMIN  → aucun périmètre territorial
+  CD     → lié à une Province
+  CB     → lié à une Entite
+  OEC    → lié à une Commune
+end note
+
+' ═══════════════════════════════════════════
+'  ENTITÉ : Personne
+' ═══════════════════════════════════════════
+
+class Personne <<Entity>> {
+    + id : Long
+    + nom : String
+    + postnom : String
+    + prenom : String?
+    + lieuNaiss : String?
+    + dateNaissance : LocalDate?
+    + heureNaissance : LocalTime?
+    + profession : String?
+    + nationalite : String?
+    + communeChefferie : String?
+    + quartierGroup : String?
+    + avenueVillage : String?
+    + celluleLocalite : String?
+    + telephone : String?
+    + email : String?
+    + sexe : Sexe
+    + statut : StatutPersonne
+    + situationMatrimoniale : SituationMatrimoniale
+}
+
+Personne "0..1\npere"  --> "0..*" Personne : est père de
+Personne "0..1\nmere"  --> "0..*" Personne : est mère de
+
+Personne --> Sexe
+Personne --> StatutPersonne
+Personne --> SituationMatrimoniale
+
+' ═══════════════════════════════════════════
+'  ENTITÉ : ActeNaissance
+' ═══════════════════════════════════════════
+
+class ActeNaissance <<Entity>> {
+    + id : Long
+    + numeroActe : String
+    + declarant : String?
+    + officier : String
+    + dateEnregistrement : LocalDate
+    + temoin1 : String?
+    + temoin2 : String?
+}
+
+ActeNaissance "0..1" --> "1\nenfant"    Personne : «OneToOne»
+ActeNaissance "0..*" --> "1"            Commune  : enregistré dans
+ActeNaissance "0..*" --> "1\nsaisiPar"  User     : «ManyToOne»
+
+' ═══════════════════════════════════════════
+'  ENTITÉ : ActeMariage
+' ═══════════════════════════════════════════
+
+class ActeMariage <<Entity>> {
+    + id : Long
+    + numeroActe : String
+    + dateMariage : LocalDate
+    + lieuMariage : String
+    + officier : String
+    + temoin1 : String?
+    + temoin2 : String?
+    + regimeMatrimonial : RegimeMatrimonial
+}
+
+ActeMariage "0..*" --> "1\nepoux"      Personne : «ManyToOne»
+ActeMariage "0..*" --> "1\nepouse"     Personne : «ManyToOne»
+ActeMariage "0..*" --> "1"             Commune  : enregistré dans
+ActeMariage "0..*" --> "1\nsaisiPar"   User     : «ManyToOne»
+ActeMariage --> RegimeMatrimonial
+
+' ═══════════════════════════════════════════
+'  ENTITÉ : ActeDeces
+' ═══════════════════════════════════════════
+
+class ActeDeces <<Entity>> {
+    + id : Long
+    + numeroActe : String
+    + dateDeces : LocalDate
+    + heureDeces : LocalTime?
+    + lieuDeces : String
+    + causeDeces : String?
+    + declarant : String?
+    + officier : String
+    + dateEnregistrement : LocalDate
+    + temoin1 : String?
+    + temoin2 : String?
+    + medecin : String?
+    + observations : String?
+}
+
+ActeDeces "0..1" --> "1\ndefunt"    Personne : «OneToOne»
+ActeDeces "0..*" --> "1"            Commune  : enregistré dans
+ActeDeces "0..*" --> "1\nsaisiPar"  User     : «ManyToOne»
+
+' ═══════════════════════════════════════════
+'  LAYOUT
+' ═══════════════════════════════════════════
+
+together {
+    enum Sexe
+    enum StatutPersonne
+    enum SituationMatrimoniale
+}
+
+together {
+    class ActeNaissance
+    class ActeMariage
+    class ActeDeces
+}
+
+together {
+    class Province
+    class Entite
+    class Commune
+}
+
+@enduml

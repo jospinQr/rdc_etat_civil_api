@@ -1,0 +1,43 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+
+' ── Clients ──────────────────────────────────────────
+
+node "Poste Agent\n(Windows / Linux / macOS)" as Desktop {
+    component "App Desktop (Kotlin Compose)" as DesktopApp
+}
+
+node "Tablette / Mobile\n(Android / iOS)" as Mobile {
+    component "App Mobile\n(Android)" as MobileApp
+}
+
+' ── Réseaux ──────────────────────────────────────────
+
+cloud  "LAN Local\n(Wi-Fi entreprise)" as LAN
+
+Desktop  --> Internet : HTTPS
+Mobile   --> Internet : HTTPS (option 1)
+Mobile   --> LAN      : HTTP/HTTPS (option 2)
+
+' ── Serveur Backend ──────────────────────────────────
+
+node "Serveur Backend\n(Ubuntu · JVM 21)" as BackendServer {
+    component "Spring Boot 3.x\n(Port 8080)" as SpringBoot
+    component "API REST\n(Spring MVC)"       as RestAPI
+    SpringBoot --> RestAPI
+}
+
+Internet --> BackendServer : HTTPS
+LAN      --> BackendServer : HTTP / HTTPS
+
+' ── Serveur Base de données ──────────────────────────
+
+node "Serveur BDD\n(Ubuntu · Port 3306)" as DBServer {
+    database "MySQL 8.x" as MySQL
+}
+
+BackendServer --> DBServer : JDBC / JPA (HikariCP)
+
+@enduml
