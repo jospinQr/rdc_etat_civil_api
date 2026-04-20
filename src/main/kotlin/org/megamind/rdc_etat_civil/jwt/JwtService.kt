@@ -6,17 +6,27 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.crypto.SecretKey
 
 
 @Service
-class JwtService {
+class JwtService(
+    @Value("\${spring.jwt.secret}")
+    private val secret: String,
 
-    private val secret = "9D6FC88ACBDB8D26B4D0F4E78E9F89A7"
-    private val key: SecretKey =
-        Keys.hmacShaKeyFor(Decoders.BASE64.decode(Base64.getEncoder().encodeToString(secret.toByteArray())))
+    @Value("\${spring.jwt.expiration}")
+    private val expiration: Long
+
+) {
+
+
+    private val key: SecretKey by lazy {
+        Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret))
+    }
+
 
     fun generateToken(
         userId: Long,
@@ -27,7 +37,6 @@ class JwtService {
         communeId: Long?,
     ): String {
         val now = Date()
-        val expiration = Date(now.time + 1000 * 60 * 600) // 10h
 
         val claims = mutableMapOf<String, Any>(
             "role" to role, "name" to username
@@ -42,7 +51,8 @@ class JwtService {
             claims["communeId"] = communeId
         }
 
-        return Jwts.builder().claims(claims).subject(userId.toString()).issuedAt(now).expiration(expiration)
+        return Jwts.builder().claims(claims).subject(userId.toString()).issuedAt(now)
+            .expiration(Date(System.currentTimeMillis() + expiration))
             .signWith(key, SignatureAlgorithm.HS256).compact()
     }
 
@@ -54,7 +64,6 @@ class JwtService {
 
     // 🔹 Extrait le rôle utilisateur
     fun extractRole(token: String): String? = extractAllClaims(token)?.get("role", String::class.java)
-
 
 
     // 🔹 Méthode interne pour parser les claims

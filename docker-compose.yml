@@ -1,13 +1,15 @@
 services:
   mysql:
     image: mysql:8.0
+    env_file:
+      - .env
     container_name: mysql-db-rdc
     restart: always
     environment:
       MYSQL_DATABASE: rdc_db
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: jospin
-      MYSQL_PASSWORD: joe@8452
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3344:3306"
     volumes:
@@ -39,14 +41,16 @@ services:
     build: .
     image: rdc_etat_civil:v1
     container_name: rdc_etat_civil_api
+    env_file:
+      - .env
     restart: always
     depends_on:
       mysql:
         condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/rdc_db  # ← CORRECTION IMPORTANTE
-      SPRING_DATASOURCE_USERNAME: jospin
-      SPRING_DATASOURCE_PASSWORD: joe@8452
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     ports:
       - "8070:8080"
     networks:
