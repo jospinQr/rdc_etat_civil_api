@@ -1,7 +1,7 @@
 @startuml
 left to right direction
 
-actor "Agent de saisie" as Agent
+
 actor "Officier état civil" as OEC
 actor "Chef de Bureau" as CB
 actor "Chef de Division" as CD
@@ -14,13 +14,12 @@ rectangle "Système État Civil" {
     usecase "S’authentifier" as UC5
 }
 
-Agent --> UC1
-Agent --> UC2
-Agent --> UC5
+
 
 OEC --> UC4
 OEC --> UC3
 OEC --> UC5
+OCE --> UC2
 
 CD --> UC3
 CB --> UC3

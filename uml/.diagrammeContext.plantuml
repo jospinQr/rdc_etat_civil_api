@@ -15,7 +15,7 @@ actor "Chef de Division\n(Niveau Province)" as CD
 actor "Administrateur\n(Global)" as ADMIN
 
 CIT  --> SYS : Encode les données
-OEC  --> SYS : Signe & valide
+OEC  --> SYS : Supervise commune\nConsulte statistiques
 CB   --> SYS : Supervise entité\nConsulte statistiques
 CD   --> SYS : Supervise province\nConsulte statistiques
 ADMIN --> SYS : Gère utilisateurs\nConfigure territoires

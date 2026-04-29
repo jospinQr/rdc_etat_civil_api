@@ -1995,6 +1995,43 @@
               ]
             }
           }
+        },
+        {
+          "name": "Dashboard - Donnees mensuelles",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/statistiques/dashboard?annee=2026&provinceId={{provinceId}}&entiteId={{entiteId}}&communeId={{communeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "statistiques",
+                "dashboard"
+              ],
+              "query": [
+                {
+                  "key": "annee",
+                  "value": "2026"
+                },
+                {
+                  "key": "provinceId",
+                  "value": "{{provinceId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "entiteId",
+                  "value": "{{entiteId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "communeId",
+                  "value": "{{communeId}}",
+                  "disabled": true
+                }
+              ]
+            }
+          }
         }
       ]
     }

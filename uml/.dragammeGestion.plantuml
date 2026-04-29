@@ -4,7 +4,7 @@ left to right direction
 actor "Agent de saisie" as Agent
 actor "Officier état civil" as OEC
 
-rectangle "Gestion État Civil" {
+rectangle "Cas d'utilisation 'GESTION' " {
 
     usecase "S’authentifier" as Auth
 
@@ -12,13 +12,11 @@ rectangle "Gestion État Civil" {
     usecase "Gérer mariage" as Mariage
     usecase "Gérer décès" as Deces
 
+
     usecase "Naissance hors délai" as HorsDelai
 }
 
-Agent --> Naissance
-Agent --> Mariage
-Agent --> Deces
-
+Agent --> HorsDelai
 OEC --> Naissance
 OEC --> Mariage
 OEC --> Deces
@@ -26,6 +24,7 @@ OEC --> Deces
 Naissance .> Auth : <<include>>
 Mariage .> Auth : <<include>>
 Deces .> Auth : <<include>>
+HorsDelai .> Auth <<include>>
 
 HorsDelai .> Naissance : <<extend>>
 

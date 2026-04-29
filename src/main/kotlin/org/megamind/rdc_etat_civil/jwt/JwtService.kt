@@ -39,7 +39,8 @@ class JwtService(
         val now = Date()
 
         val claims = mutableMapOf<String, Any>(
-            "role" to role, "name" to username
+            "role" to role,
+            "name" to username
         )
         if (provinceId != null) {
             claims["provinceId"] = provinceId

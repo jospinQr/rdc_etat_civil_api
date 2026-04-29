@@ -5,11 +5,11 @@ skinparam defaultFontSize 13
 
 ' ── Clients ──────────────────────────────────────────
 
-node "Poste Agent\n(Windows / Linux / macOS)" as Desktop {
+node "Poste Agent\n(Windows)" as Desktop {
     component "App Desktop (Kotlin Compose)" as DesktopApp
 }
 
-node "Tablette / Mobile\n(Android / iOS)" as Mobile {
+node "Tablette / Mobile\n(Android)" as Mobile {
     component "App Mobile\n(Android)" as MobileApp
 }
 
@@ -30,7 +30,7 @@ node "Serveur Backend\n(Ubuntu · JVM 21)" as BackendServer {
 }
 
 Internet --> BackendServer : HTTPS
-LAN      --> BackendServer : HTTP / HTTPS
+LAN      --> BackendServer : HTTP
 
 ' ── Serveur Base de données ──────────────────────────
 
@@ -39,5 +39,23 @@ node "Serveur BDD\n(Ubuntu · Port 3306)" as DBServer {
 }
 
 BackendServer --> DBServer : JDBC / JPA (HikariCP)
+' ── Backup NAS ───────────────────────────────────────
 
+node "NAS\n(Synology / TrueNAS)" as NAS {
+    component "Stockage Backup\n(RAID)" as NASStorage
+    component "Service Backup\n(rsync / SMB / NFS)" as NASService
+}
+
+cloud "Stockage Externe\n(Cloud)" as OffsiteBackup
+
+' Backup base de données
+DBServer --> NASService : Dump MySQL (scp / rsync)
+NASService --> NASStorage : fichiers .sql
+
+' Backup fichiers (PDF, images)
+BackendServer --> NASService : rsync
+NASService --> NASStorage : fichiers (.tar.gz)
+
+' Sync externe
+NASStorage --> OffsiteBackup : Sync (rclone / Cloud Sync)
 @enduml

@@ -35,3 +35,10 @@ data class StatistiqueResponseDto(
     val statsParRegion: List<StatistiqueRegionDto>? = null,
     val statsEvolution: List<StatistiqueEvolutionDto>? = null
 )
+
+data class DashboardMoisDto(
+    val mois: String,
+    val naissances: Long,
+    val deces: Long,
+    val mariages: Long
+)

@@ -26,4 +26,15 @@ class StatistiqueController(
         val response = statistiqueService.obtenirStatistiques(dateDebut, dateFin, grouperPar, provinceId, entiteId, communeId)
         return ResponseEntity.ok(response)
     }
+
+    @GetMapping("/dashboard")
+    fun getDashboardData(
+        @RequestParam(required = false) annee: Int?,
+        @RequestParam(required = false) provinceId: Long?,
+        @RequestParam(required = false) entiteId: Long?,
+        @RequestParam(required = false) communeId: Long?
+    ): ResponseEntity<List<DashboardMoisDto>> {
+        val response = statistiqueService.obtenirDonneesDashboard(annee, provinceId, entiteId, communeId)
+        return ResponseEntity.ok(response)
+    }
 }
